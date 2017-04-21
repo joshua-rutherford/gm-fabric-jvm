@@ -1,0 +1,7 @@
+machine:
+    java:
+        version: oraclejdk8
+
+deployment:
+    override:
+        - if [ -z "${CI_PULL_REQUEST}" ]; then mvn deploy -P deploy -s settings.xml; fi
