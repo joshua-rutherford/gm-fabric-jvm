@@ -5,7 +5,7 @@ This document is a live example of roughly what you will see when you generate y
 
 ## Generation command
 
-    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.2.0-SNAPSHOT
+    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.1.1-SNAPSHOT
     
 ### Output generated
 
@@ -23,36 +23,36 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Generating project in Interactive mode
     [WARNING] Archetype not found in any catalog. Falling back to central repository (http://repo.maven.apache.org/maven2).
     [WARNING] Use -DarchetypeRepository=<your repository> if archetype's repository is elsewhere.
-    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric-archetype/0.2.0-SNAPSHOT/maven-metadata.xml
+    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric-archetype/0.1.1-SNAPSHOT/maven-metadata.xml
     
-    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric/0.2.0-SNAPSHOT/maven-metadata.xml
+    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric/0.1.1-SNAPSHOT/maven-metadata.xml
     
     Define value for property 'groupId': com.somepackage
     Define value for property 'artifactId': myfirstmicroservice
-    [INFO] Using property: version = 0.2.0-SNAPSHOT
+    [INFO] Using property: version = 0.1.0-SNAPSHOT
     Define value for property 'package' com.somepackage: : 
     Define value for property 'appName': MyFirstMicroservice
-    [INFO] Using property: serviceFrameworkVersion = 0.2.0-SNAPSHOT
+    [INFO] Using property: serviceFrameworkVersion = 0.1.1-SNAPSHOT
     Confirm properties configuration:
     groupId: com.somepackage
     artifactId: myfirstmicroservice
-    version: 0.2.0-SNAPSHOT
+    version: 0.1.0-SNAPSHOT
     package: com.somepackage
     appName: MyFirstMicroservice
-    serviceFrameworkVersion: 0.2.0-SNAPSHOT
+    serviceFrameworkVersion: 0.1.1-SNAPSHOT
      Y: : Y
     [INFO] ----------------------------------------------------------------------------
-    [INFO] Using following parameters for creating project from Archetype: gm-fabric-archetype:0.2.0-SNAPSHOT
+    [INFO] Using following parameters for creating project from Archetype: gm-fabric-archetype:0.1.1-SNAPSHOT
     [INFO] ----------------------------------------------------------------------------
     [INFO] Parameter: groupId, Value: com.somepackage
     [INFO] Parameter: artifactId, Value: myfirstmicroservice
-    [INFO] Parameter: version, Value: 0.2.0-SNAPSHOT
+    [INFO] Parameter: version, Value: 0.1.0-SNAPSHOT
     [INFO] Parameter: package, Value: com.somepackage
     [INFO] Parameter: packageInPathFormat, Value: com/somepackage
     [INFO] Parameter: appName, Value: MyFirstMicroservice
-    [INFO] Parameter: serviceFrameworkVersion, Value: 0.2.0-SNAPSHOT
+    [INFO] Parameter: serviceFrameworkVersion, Value: 0.1.1-SNAPSHOT
     [INFO] Parameter: package, Value: com.somepackage
-    [INFO] Parameter: version, Value: 0.2.0-SNAPSHOT
+    [INFO] Parameter: version, Value: 0.1.0-SNAPSHOT
     [INFO] Parameter: groupId, Value: com.somepackage
     [INFO] Parameter: artifactId, Value: myfirstmicroservice
     [INFO] Parent element not overwritten in /home/user/dev/workspaces/ms/myfirstmicroservice/business/pom.xml
@@ -77,14 +77,14 @@ This document is a live example of roughly what you will see when you generate y
 
     [INFO] Scanning for projects...
     [WARNING] 
-    [WARNING] Some problems were encountered while building the effective model for com.somepackage:myfirstmicroservice-business:jar:0.2.0-SNAPSHOT
+    [WARNING] Some problems were encountered while building the effective model for com.somepackage:myfirstmicroservice-business:jar:0.1.0-SNAPSHOT
     [WARNING] 'build.plugins.plugin.version' for net.alchim31.maven:scala-maven-plugin is missing. @ com.somepackage:myfirstmicroservice-business:[unknown-version], /home/user/dev/workspaces/ms/myfirstmicroservice/business/pom.xml, line 28, column 21
     [WARNING] 
-    [WARNING] Some problems were encountered while building the effective model for com.somepackage:myfirstmicroservice-client:jar:0.2.0-SNAPSHOT
+    [WARNING] Some problems were encountered while building the effective model for com.somepackage:myfirstmicroservice-client:jar:0.1.0-SNAPSHOT
     [WARNING] 'build.plugins.plugin.version' for net.alchim31.maven:scala-maven-plugin is missing. @ com.somepackage:myfirstmicroservice-client:[unknown-version], /home/user/dev/workspaces/ms/myfirstmicroservice/client/pom.xml, line 32, column 21
     [WARNING] The expression ${version} is deprecated. Please use ${project.version} instead.
     [WARNING] 
-    [WARNING] Some problems were encountered while building the effective model for com.somepackage:myfirstmicroservice-server:jar:0.2.0-SNAPSHOT
+    [WARNING] Some problems were encountered while building the effective model for com.somepackage:myfirstmicroservice-server:jar:0.1.0-SNAPSHOT
     [WARNING] 'build.plugins.plugin.version' for net.alchim31.maven:scala-maven-plugin is missing. @ com.somepackage:myfirstmicroservice-server:[unknown-version], /home/user/dev/workspaces/ms/myfirstmicroservice/server/pom.xml, line 147, column 21
     [WARNING] The expression ${artifactId} is deprecated. Please use ${project.artifactId} instead.
     [WARNING] The expression ${version} is deprecated. Please use ${project.version} instead.
@@ -104,13 +104,13 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] myfirstmicroservice-server
     [INFO]                                                                         
     [INFO] ------------------------------------------------------------------------
-    [INFO] Building myfirstmicroservice 0.2.0-SNAPSHOT
+    [INFO] Building myfirstmicroservice 0.1.0-SNAPSHOT
     [INFO] ------------------------------------------------------------------------
     [INFO] 
     [INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ myfirstmicroservice ---
     [INFO]                                                                         
     [INFO] ------------------------------------------------------------------------
-    [INFO] Building myfirstmicroservice-business 0.2.0-SNAPSHOT
+    [INFO] Building myfirstmicroservice-business 0.1.0-SNAPSHOT
     [INFO] ------------------------------------------------------------------------
     [INFO] 
     [INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ myfirstmicroservice-business ---
@@ -147,10 +147,10 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] No tests to run.
     [INFO] 
     [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ myfirstmicroservice-business ---
-    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/business/target/myfirstmicroservice-business-0.2.0-SNAPSHOT.jar
+    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/business/target/myfirstmicroservice-business-0.1.0-SNAPSHOT.jar
     [INFO]                                                                         
     [INFO] ------------------------------------------------------------------------
-    [INFO] Building myfirstmicroservice-model 0.2.0-SNAPSHOT
+    [INFO] Building myfirstmicroservice-model 0.1.0-SNAPSHOT
     [INFO] ------------------------------------------------------------------------
     [INFO] 
     [INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ myfirstmicroservice-model ---
@@ -195,10 +195,10 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] No tests to run.
     [INFO] 
     [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ myfirstmicroservice-model ---
-    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/model/target/myfirstmicroservice-model-0.2.0-SNAPSHOT.jar
+    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/model/target/myfirstmicroservice-model-0.1.0-SNAPSHOT.jar
     [INFO]                                                                         
     [INFO] ------------------------------------------------------------------------
-    [INFO] Building myfirstmicroservice-client 0.2.0-SNAPSHOT
+    [INFO] Building myfirstmicroservice-client 0.1.0-SNAPSHOT
     [INFO] ------------------------------------------------------------------------
     [INFO] 
     [INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ myfirstmicroservice-client ---
@@ -235,10 +235,10 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] No tests to run.
     [INFO] 
     [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ myfirstmicroservice-client ---
-    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/client/target/myfirstmicroservice-client-0.2.0-SNAPSHOT.jar
+    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/client/target/myfirstmicroservice-client-0.1.0-SNAPSHOT.jar
     [INFO]                                                                         
     [INFO] ------------------------------------------------------------------------
-    [INFO] Building myfirstmicroservice-server 0.2.0-SNAPSHOT
+    [INFO] Building myfirstmicroservice-server 0.1.0-SNAPSHOT
     [INFO] ------------------------------------------------------------------------
     [WARNING] The POM for tanukisoft:wrapper-delta-pack:tar.gz:3.5.25 is missing, no dependency information available
     [INFO] 
@@ -310,7 +310,7 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] No tests to run.
     [INFO] 
     [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ myfirstmicroservice-server ---
-    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT.jar
+    [INFO] Building jar: /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT.jar
     [INFO] 
     [INFO] --- maven-dependency-plugin:2.8:unpack (default) @ myfirstmicroservice-server ---
     [INFO] Configured Artifact: tanukisoft:wrapper-delta-pack:?:tar.gz
@@ -318,7 +318,7 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Expanding: /home/user/.m2/repository/tanukisoft/wrapper-delta-pack/3.5.25/wrapper-delta-pack-3.5.25.tar.gz into /home/user/dev/workspaces/ms/myfirstmicroservice/server/target
     [INFO] 
     [INFO] --- appassembler-maven-plugin:1.9:generate-daemons (generate-jsw-scripts) @ myfirstmicroservice-server ---
-    [INFO] Installing artifact /home/user/.m2/repository/com/deciphernow/gm-fabric-core/0.2.0-SNAPSHOT/gm-fabric-core-0.2.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/gm-fabric-core-0.2.0-SNAPSHOT.jar
+    [INFO] Installing artifact /home/user/.m2/repository/com/deciphernow/gm-fabric-core/0.1.1-SNAPSHOT/gm-fabric-core-0.1.1-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/gm-fabric-core-0.1.1-SNAPSHOT.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/util-logging_2.11/6.41.0/util-logging_2.11-6.41.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/util-logging_2.11-6.41.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finatra-thrift_2.11/2.8.0/finatra-thrift_2.11-2.8.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finatra-thrift_2.11-2.8.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/inject-thrift_2.11/2.8.0/inject-thrift_2.11-2.8.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/inject-thrift_2.11-2.8.0.jar
@@ -331,9 +331,9 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Installing artifact /home/user/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/commons-logging-1.1.3.jar
     [INFO] Installing artifact /home/user/.m2/repository/commons-codec/commons-codec/1.6/commons-codec-1.6.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/commons-codec-1.6.jar
     [INFO] Installing artifact /home/user/.m2/repository/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/httpcore-4.3.2.jar
-    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/model/target/myfirstmicroservice-model-0.2.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-model-0.2.0-SNAPSHOT.jar
+    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/model/target/myfirstmicroservice-model-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-model-0.1.1-SNAPSHOT.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/scrooge-core_2.11/4.14.0/scrooge-core_2.11-4.14.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/scrooge-core_2.11-4.14.0.jar
-    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/business/target/myfirstmicroservice-business-0.2.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-business-0.2.0-SNAPSHOT.jar
+    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/business/target/myfirstmicroservice-business-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-business-0.1.1-SNAPSHOT.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finagle-core_2.11/6.42.0/finagle-core_2.11-6.42.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finagle-core_2.11-6.42.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finagle-toggle_2.11/6.42.0/finagle-toggle_2.11-6.42.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finagle-toggle_2.11-6.42.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/util-app_2.11/6.41.0/util-app_2.11-6.41.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/util-app_2.11-6.41.0.jar
@@ -457,11 +457,11 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Installing artifact /home/user/.m2/repository/org/slf4j/log4j-over-slf4j/1.7.21/log4j-over-slf4j-1.7.21.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/log4j-over-slf4j-1.7.21.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/inject-utils_2.11/2.8.0/inject-utils_2.11-2.8.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/inject-utils_2.11-2.8.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finagle-mux_2.11/6.42.0/finagle-mux_2.11-6.42.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finagle-mux_2.11-6.42.0.jar
-    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-server-0.2.0-SNAPSHOT.jar
+    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-server-0.1.1-SNAPSHOT.jar
     [INFO] 
     [INFO] --- maven-assembly-plugin:2.5.2:single (default) @ myfirstmicroservice-server ---
-    [INFO] Building tar: /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT-app.tgz
-    [INFO] Copying files to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT-app
+    [INFO] Building tar: /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app.tgz
+    [INFO] Copying files to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app
     [INFO] ------------------------------------------------------------------------
     [INFO] Reactor Summary:
     [INFO] 
@@ -480,7 +480,7 @@ This document is a live example of roughly what you will see when you generate y
     
 ## Executing MyFirstMicroservice
    
-    $ server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT-app/myfirstmicroservice-server-0.2.0-SNAPSHOT/bin/myfirstmicroservice-server console
+    $ server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app/myfirstmicroservice-server-0.1.0-SNAPSHOT/bin/myfirstmicroservice-server console
     
 ### Execution output
 
@@ -495,8 +495,8 @@ This document is a live example of roughly what you will see when you generate y
     jvm 1    | Feb 23, 2017 11:07:24 AM com.twitter.app.App$$anonfun$register$1 apply
     jvm 1    | WARNING: Multiple com.twitter.app.App main methods called. com.somepackage.MyFirstMicroservice, then com.deciphernow.server.thrift.GMFabricThriftServer
     jvm 1    | SLF4J: Class path contains multiple SLF4J bindings.
-    jvm 1    | SLF4J: Found binding in [jar:file:/home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT-app/myfirstmicroservice-server-0.2.0-SNAPSHOT/lib/logback-classic-1.1.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
-    jvm 1    | SLF4J: Found binding in [jar:file:/home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT-app/myfirstmicroservice-server-0.2.0-SNAPSHOT/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+    jvm 1    | SLF4J: Found binding in [jar:file:/home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app/myfirstmicroservice-server-0.1.0-SNAPSHOT/lib/logback-classic-1.1.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+    jvm 1    | SLF4J: Found binding in [jar:file:/home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app/myfirstmicroservice-server-0.1.0-SNAPSHOT/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
     jvm 1    | SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
     jvm 1    | SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
     jvm 1    | 11:07:24.639 [WrapperSimpleAppMain] INFO  c.d.s.thrift.GMFabricThriftServer - Process started

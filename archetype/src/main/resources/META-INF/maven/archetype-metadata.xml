@@ -10,14 +10,14 @@
         Version of the service-framework
     -->
     <requiredProperty key="serviceFrameworkVersion">
-      <defaultValue>0.2.0-SNAPSHOT</defaultValue>
+      <defaultValue>0.1.1-SNAPSHOT</defaultValue>
     </requiredProperty>
 
     <!--
         Version of the initial creation of a microservice framework project
     -->
     <requiredProperty key="version">
-      <defaultValue>0.2.0-SNAPSHOT</defaultValue>
+      <defaultValue>0.1.1-SNAPSHOT</defaultValue>
     </requiredProperty>
 
   </requiredProperties>

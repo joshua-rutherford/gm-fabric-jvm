@@ -15,7 +15,7 @@ You need to install the tanuki software service wrapper delta pack into your loc
 - Go to a location where you would like your ervice to be created at.
 - Create the microservice
 
-    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.2.0-SNAPSHOT
+    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.1.1-SNAPSHOT
 
 Maven will prompt you for the following information:
 
@@ -23,7 +23,7 @@ Maven will prompt you for the following information:
 | -----------| ------------|
 | groupId | groupId will identify your project uniquely across all projects, so we need to enforce a naming schema. It has to follow the package name rules, which means that it has to be at least a domain name you control, and you can create as many subgroups as you want. <br /><br />Please see the link below for more information:<br />http://maven.apache.org/guides/mini/guide-naming-conventions.html |
 | artifactId | artifactId is the name of the jar without version. If you created it, then you can choose whatever name you want with lowercase letters and no strange symbols. If it's a third party jar, you have to take the name of the jar as it's distributed.<br /><br />Please see the link below for more information: <br /> http://maven.apache.org/guides/mini/guide-naming-conventions.html |
-| version | version is defaulted and cannot be changed. 0.2.0-SNAPSHOT. |
+| version | version is defaulted and cannot be changed. 0.1.0-SNAPSHOT. |
 | package | A package is a group of related types providing access protection and name space management. Note that types refers to classes, interfaces, enumerations, and annotation types. Enumerations and annotation types are special kinds of classes and interfaces, respectively, so types are often referred to in this lesson simply as classes and interfaces.<br /><br />Please see the link below for more information:<br />http://docs.oracle.com/javase/tutorial/java/package/packages.html |
 | appName | The appName is the programmatic name for your new service.  The archetype uses this value to generate the class names as defined below. |
 
@@ -95,7 +95,7 @@ The following module and directory structure is generated.
 - Start the microservice
     - Traverse into the microservice:
     
-            $ cd myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT-app/myfirstmicroservice-server-0.2.0-SNAPSHOT/bin
+            $ cd myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app/myfirstmicroservice-server-0.1.0-SNAPSHOT/bin
         
     - Start the service in foreground
     
@@ -129,7 +129,7 @@ To access the [administration](Admin.md) and see active services http://localhos
 To see your microservice running without SSL.
 From the command line:
 
-    cd myfirstmicroservice/server/target/myfirstmicroservice-server-0.2.0-SNAPSHOT-app/myfirstmicroservice-server-0.2.0-SNAPSHOT/bin
+    cd myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app/myfirstmicroservice-server-0.1.0-SNAPSHOT/bin
     ./myfirst-microserviceserver console
        
 In your browser hit the service admin endpoint:
