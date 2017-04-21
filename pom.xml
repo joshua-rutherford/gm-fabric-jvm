@@ -16,7 +16,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.deciphernow</groupId>
     <artifactId>gm-fabric</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Micro-service framework</name>
 
