@@ -19,6 +19,7 @@
     <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Micro-service framework</name>
+    <description>A microservice framework for the JVM.</description>
 
     <modules>
         <module>core</module>
