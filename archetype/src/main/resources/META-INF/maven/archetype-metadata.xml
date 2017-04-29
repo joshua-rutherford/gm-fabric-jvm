@@ -10,7 +10,7 @@
         Version of the service-framework
     -->
     <requiredProperty key="serviceFrameworkVersion">
-      <defaultValue>0.1.2</defaultValue>
+      <defaultValue>0.1.3-SNAPSHOT</defaultValue>
     </requiredProperty>
 
     <!--
