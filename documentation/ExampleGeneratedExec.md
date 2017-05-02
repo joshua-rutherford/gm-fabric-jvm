@@ -5,7 +5,7 @@ This document is a live example of roughly what you will see when you generate y
 
 ## Generation command
 
-    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.1.2
+    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.1.3
     
 ### Output generated
 
@@ -23,26 +23,26 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Generating project in Interactive mode
     [WARNING] Archetype not found in any catalog. Falling back to central repository (http://repo.maven.apache.org/maven2).
     [WARNING] Use -DarchetypeRepository=<your repository> if archetype's repository is elsewhere.
-    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric-archetype/0.1.2/maven-metadata.xml
+    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric-archetype/0.1.3/maven-metadata.xml
     
-    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric/0.1.2/maven-metadata.xml
+    Downloading: http://repo.maven.apache.org/maven2/com/deciphernow/gm-fabric/0.1.3/maven-metadata.xml
     
     Define value for property 'groupId': com.somepackage
     Define value for property 'artifactId': myfirstmicroservice
     [INFO] Using property: version = 0.1.0-SNAPSHOT
     Define value for property 'package' com.somepackage: : 
     Define value for property 'appName': MyFirstMicroservice
-    [INFO] Using property: serviceFrameworkVersion = 0.1.2
+    [INFO] Using property: serviceFrameworkVersion = 0.1.3
     Confirm properties configuration:
     groupId: com.somepackage
     artifactId: myfirstmicroservice
     version: 0.1.0-SNAPSHOT
     package: com.somepackage
     appName: MyFirstMicroservice
-    serviceFrameworkVersion: 0.1.2
+    serviceFrameworkVersion: 0.1.3
      Y: : Y
     [INFO] ----------------------------------------------------------------------------
-    [INFO] Using following parameters for creating project from Archetype: gm-fabric-archetype:0.1.2
+    [INFO] Using following parameters for creating project from Archetype: gm-fabric-archetype:0.1.3
     [INFO] ----------------------------------------------------------------------------
     [INFO] Parameter: groupId, Value: com.somepackage
     [INFO] Parameter: artifactId, Value: myfirstmicroservice
@@ -50,7 +50,7 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Parameter: package, Value: com.somepackage
     [INFO] Parameter: packageInPathFormat, Value: com/somepackage
     [INFO] Parameter: appName, Value: MyFirstMicroservice
-    [INFO] Parameter: serviceFrameworkVersion, Value: 0.1.2
+    [INFO] Parameter: serviceFrameworkVersion, Value: 0.1.3
     [INFO] Parameter: package, Value: com.somepackage
     [INFO] Parameter: version, Value: 0.1.0-SNAPSHOT
     [INFO] Parameter: groupId, Value: com.somepackage
@@ -318,7 +318,7 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Expanding: /home/user/.m2/repository/tanukisoft/wrapper-delta-pack/3.5.25/wrapper-delta-pack-3.5.25.tar.gz into /home/user/dev/workspaces/ms/myfirstmicroservice/server/target
     [INFO] 
     [INFO] --- appassembler-maven-plugin:1.9:generate-daemons (generate-jsw-scripts) @ myfirstmicroservice-server ---
-    [INFO] Installing artifact /home/user/.m2/repository/com/deciphernow/gm-fabric-core/0.1.2/gm-fabric-core-0.1.2.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/gm-fabric-core-0.1.2.jar
+    [INFO] Installing artifact /home/user/.m2/repository/com/deciphernow/gm-fabric-core/0.1.3/gm-fabric-core-0.1.3.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/gm-fabric-core-0.1.3.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/util-logging_2.11/6.41.0/util-logging_2.11-6.41.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/util-logging_2.11-6.41.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finatra-thrift_2.11/2.8.0/finatra-thrift_2.11-2.8.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finatra-thrift_2.11-2.8.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/inject-thrift_2.11/2.8.0/inject-thrift_2.11-2.8.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/inject-thrift_2.11-2.8.0.jar
@@ -331,9 +331,9 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Installing artifact /home/user/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/commons-logging-1.1.3.jar
     [INFO] Installing artifact /home/user/.m2/repository/commons-codec/commons-codec/1.6/commons-codec-1.6.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/commons-codec-1.6.jar
     [INFO] Installing artifact /home/user/.m2/repository/org/apache/httpcomponents/httpcore/4.3.2/httpcore-4.3.2.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/httpcore-4.3.2.jar
-    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/model/target/myfirstmicroservice-model-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-model-0.1.2.jar
+    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/model/target/myfirstmicroservice-model-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-model-0.1.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/scrooge-core_2.11/4.14.0/scrooge-core_2.11-4.14.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/scrooge-core_2.11-4.14.0.jar
-    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/business/target/myfirstmicroservice-business-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-business-0.1.2.jar
+    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/business/target/myfirstmicroservice-business-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-business-0.1.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finagle-core_2.11/6.42.0/finagle-core_2.11-6.42.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finagle-core_2.11-6.42.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finagle-toggle_2.11/6.42.0/finagle-toggle_2.11-6.42.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finagle-toggle_2.11-6.42.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/util-app_2.11/6.41.0/util-app_2.11-6.41.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/util-app_2.11-6.41.0.jar
@@ -457,7 +457,7 @@ This document is a live example of roughly what you will see when you generate y
     [INFO] Installing artifact /home/user/.m2/repository/org/slf4j/log4j-over-slf4j/1.7.21/log4j-over-slf4j-1.7.21.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/log4j-over-slf4j-1.7.21.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/inject-utils_2.11/2.8.0/inject-utils_2.11-2.8.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/inject-utils_2.11-2.8.0.jar
     [INFO] Installing artifact /home/user/.m2/repository/com/twitter/finagle-mux_2.11/6.42.0/finagle-mux_2.11-6.42.0.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/finagle-mux_2.11-6.42.0.jar
-    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-server-0.1.2.jar
+    [INFO] Installing artifact /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT.jar to /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/appassembler/jsw/myfirstmicroservice-server/lib/myfirstmicroservice-server-0.1.0.jar
     [INFO] 
     [INFO] --- maven-assembly-plugin:2.5.2:single (default) @ myfirstmicroservice-server ---
     [INFO] Building tar: /home/user/dev/workspaces/ms/myfirstmicroservice/server/target/myfirstmicroservice-server-0.1.0-SNAPSHOT-app.tgz

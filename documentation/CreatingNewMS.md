@@ -15,7 +15,7 @@ You need to install the tanuki software service wrapper delta pack into your loc
 - Go to a location where you would like your ervice to be created at.
 - Create the microservice
 
-    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.1.2
+    $ mvn archetype:generate -DarchetypeGroupId=com.deciphernow -DarchetypeArtifactId=gm-fabric-archetype -DarchetypeVersion=0.1.3
 
 Maven will prompt you for the following information:
 
