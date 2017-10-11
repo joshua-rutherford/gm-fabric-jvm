@@ -71,6 +71,8 @@ abstract class GMFabricServer extends App {
           log.ifInfo(s"thrift server started on port ${configuration.thrift.port()}")
           //announce(thriftServer.get.getServer,"thrift")
           //myAnnouncer("thrift")
+
+          // only do if zk configured
           announcer(configuration.thrift.port(),"thrift")
         })
       case _ => log.info("No thrift server defined.")
@@ -93,7 +95,7 @@ abstract class GMFabricServer extends App {
         println("ZOMBIE :: port for http  => " + restServer.get.defaultFinatraHttpPort)
         println("ZOMBIE :: port for https => " + restServer.get.defaultHttpsPort)
 
-
+// only do if zk configured.
         announcer(restServer.get.getAdminPort,"admin")
         announcer(restServer.get.getHttpPort,"http")
         announcer(restServer.get.getHttpsPort,"https") // todo: what happens if does not exist?
@@ -141,30 +143,57 @@ abstract class GMFabricServer extends App {
       port
     }
     if (tmp.trim.length>0) {
-      try { announcer(tmp.toInt,scheme) }
+      try {
+        announcer(tmp.toInt,scheme)
+//        if (configuration.ipAddress.enableIpAddressResolution.get.get) {
+//          announcerIpAddress(tmp.toInt,scheme)
+//        }
+//        else {
+//          announcerHostname(tmp.toInt,scheme)
+//        }
+      }
       catch { case _ : Exception => println("ZOMBIE :: I HAVE AN EXCEPTION!!!!") }
     }
   }
+
+//  def announcerHostname(port: Int, scheme: String) : Unit = {
+//    println("ZOMBIE : announcerHostname(port : Int, scheme: String) : " + port + " // " + scheme)
+//    if (!configuration.zk.zookeeperConnection().isEmpty && !configuration.zk.announcementPoint().isEmpty) {
+//
+//    }
+//    else {
+//      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
+//    }
+//
+//  }
 
   def announcer(port : Int, scheme: String) : Unit = {
 
     println("ZOMBIE : announcer(port : Int, scheme: String) : " + port + " // " + scheme)
 
-    val networkInterfaces = NetworkInterface.getNetworkInterfaces
-    while (networkInterfaces.hasMoreElements) {
-      val networkInterface = networkInterfaces.nextElement
+    if (!configuration.zk.zookeeperConnection().isEmpty && !configuration.zk.announcementPoint().isEmpty) {
+      val networkInterfaces = NetworkInterface.getNetworkInterfaces
+      while (networkInterfaces.hasMoreElements) {
+        val networkInterface = networkInterfaces.nextElement
 
-      if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
-        val addresses = networkInterface.getInetAddresses
-        while (addresses.hasMoreElements) {
-          val anAddress = addresses.nextElement
-          if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
-            println("ZOMBIE :: bld.address :: FINALLY!! -> " + Some(new InetSocketAddress(convertIpAddress(anAddress.getAddress), port)))
+        if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
+          val addresses = networkInterface.getInetAddresses
+          while (addresses.hasMoreElements) {
+            val anAddress = addresses.nextElement
+            if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
+              configuration.ipAddress.enableIpAddressResolution
+              val tmp = if (useIpAddressResolution) { convertIpAddress(anAddress.getAddress) }
+                        else { anAddress.getHostName }
+              println("ZOMBIE :: bld.address :: FINALLY!! -> " + Some(new InetSocketAddress(tmp, port)))
+            }
           }
         }
       }
-
     }
+    else {
+      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
+    }
+
   }
 
   def myAnnouncerX(scheme : String) : Unit = {
