@@ -27,6 +27,7 @@ import com.twitter.finagle._
 import com.twitter.logging.Logger
 import com.twitter.util.{Future, Time}
 import com.deciphernow.server.{config => configuration}
+import com.twitter.finagle.util.InetSocketAddressUtil
 
 /**
   * Created by ghershfield on 4/19/16.
@@ -67,15 +68,32 @@ abstract class GMFabricServer extends App {
           thriftServer.get.main(Array())
           log.ifInfo(s"thrift server started on port ${configuration.thrift.port()}")
           announce(thriftServer.get.getServer,"thrift")
+          myAnnouncer("thrift")
         })
       case _ => log.info("No thrift server defined.")
     }
+
+
+
+    println("ZOMBIE :: thrift server bound to: " + InetSocketAddressUtil.toPublic(thriftServer.get.getServer.get.boundAddress))
 
     rest match {
       case Some(_) =>
         log.ifDebug("creating restful server.")
         restServer = Option(new GMFabricRestServer(rest.get.filters, rest.get.controllers))
-        restServer.foreach( _ =>
+
+        println("ZOMBIE :: Admin server bound to: " + InetSocketAddressUtil.toPublic(restServer.get.adminBoundAddress))
+
+        println("ZOMBIE :: hostname = " + restServer.get.adminBoundAddress.getHostName)
+        println("ZOMBIE :: direct InetAddress request = " + InetAddress.getLocalHost)
+        println("ZOMBIE :: port for admin => " + restServer.get.defaultHttpPort)
+        println("ZOMBIE :: port for http  => " + restServer.get.defaultFinatraHttpPort)
+        println("ZOMBIE :: port for https => " + restServer.get.defaultHttpsPort)
+
+        restServer.foreach( _ => {
+          myAnnouncer("http")
+          myAnnouncer("https")
+          myAnnouncer("admin")
           if (configuration.zk.announcementPoint.equals("") || configuration.zk.zookeeperConnection.equals("")) {
             restServer.get.main(Array())
           }
@@ -84,6 +102,7 @@ abstract class GMFabricServer extends App {
               Array(configureAnnouncement("-http.announce", "http"), configureAnnouncement("-https.announce", "https"), configureAnnouncement("-admin.announce", "admin"))
             )
           }
+        }
         )
       case _ => log.error("No rest server defined. All services will shutdown.")
     }
@@ -94,6 +113,17 @@ abstract class GMFabricServer extends App {
   var networkInterfaceName : String = ""
   private[this] var announcements = List.empty[Future[Announcement]]
 
+
+  def myAnnouncer(scheme : String) : Unit = {
+    val address = InetAddress.getLocalHost
+    println("ZOMBIE address-canonical-name : " + address.getCanonicalHostName)
+    println("ZOMBIE address-host-name      : " + address.getHostName)
+    println("ZOMBIE address-host-address   : " + address.getHostAddress)
+
+    val endpointAddress = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
+
+    println("ZOMBIE zk endpointAddress     : " + endpointAddress)
+  }
 
   /**
     *

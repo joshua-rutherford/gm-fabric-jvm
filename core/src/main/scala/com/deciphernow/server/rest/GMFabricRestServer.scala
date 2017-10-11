@@ -51,6 +51,8 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
     configuration.rest.httpPort()
   }
 
+  def getHttpPort : String = defaultFinatraHttpPort
+
   /**
     * HTTPS Port
     *
@@ -62,6 +64,9 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
       case (_,_) => ""
     }
   }
+
+  def getHttpsPort : String = defaultHttpsPort
+
   /**
     * Admin port
     *
@@ -69,6 +74,7 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
     */
   override def defaultHttpPort: Int = configuration.admin.port().substring(1).toInt
 
+  def getAdminPort : Int = defaultHttpPort
   /**
     *
     * @return
