@@ -18,6 +18,8 @@ package com.deciphernow.server
 */
 
 import java.net._
+import java.util
+import java.util.Enumeration
 
 import com.deciphernow.server.rest.GMFabricRestServer
 import com.deciphernow.server.support.SupportUtils
@@ -67,8 +69,9 @@ abstract class GMFabricServer extends App {
         thriftServer.foreach(_ => {
           thriftServer.get.main(Array())
           log.ifInfo(s"thrift server started on port ${configuration.thrift.port()}")
-          announce(thriftServer.get.getServer,"thrift")
-          myAnnouncer("thrift")
+          //announce(thriftServer.get.getServer,"thrift")
+          //myAnnouncer("thrift")
+          announcer(configuration.thrift.port(),"thrift")
         })
       case _ => log.info("No thrift server defined.")
     }
@@ -90,20 +93,28 @@ abstract class GMFabricServer extends App {
         println("ZOMBIE :: port for http  => " + restServer.get.defaultFinatraHttpPort)
         println("ZOMBIE :: port for https => " + restServer.get.defaultHttpsPort)
 
-        restServer.foreach( _ => {
-          myAnnouncer("http")
-          myAnnouncer("https")
-          myAnnouncer("admin")
-          if (configuration.zk.announcementPoint.equals("") || configuration.zk.zookeeperConnection.equals("")) {
-            restServer.get.main(Array())
-          }
-          else {
-            restServer.get.main(
-              Array(configureAnnouncement("-http.announce", "http"), configureAnnouncement("-https.announce", "https"), configureAnnouncement("-admin.announce", "admin"))
-            )
-          }
-        }
-        )
+
+        announcer(restServer.get.getAdminPort,"admin")
+        announcer(restServer.get.getHttpPort,"http")
+        announcer(restServer.get.getHttpsPort,"https") // todo: what happens if does not exist?
+
+        restServer.get.main(Array())
+//        restServer.foreach( _ => {
+////          myAnnouncer("http")
+////          myAnnouncer("https")
+////          myAnnouncer("admin")
+//          if (configuration.zk.announcementPoint.equals("") || configuration.zk.zookeeperConnection.equals("")) {
+//            restServer.get.main(Array())
+//          }
+//          else {
+//            restServer.get.main(
+//              Array(configureAnnouncement("-http.announce", "http"),
+//                configureAnnouncement("-https.announce", "https"),
+//                configureAnnouncement("-admin.announce", "admin"))
+//            )
+//          }
+//        }
+//        )
       case _ => log.error("No rest server defined. All services will shutdown.")
     }
 
@@ -114,15 +125,92 @@ abstract class GMFabricServer extends App {
   private[this] var announcements = List.empty[Future[Announcement]]
 
 
-  def myAnnouncer(scheme : String) : Unit = {
+  def announcer(port : Option[String], scheme: String) : Unit = {
+    println("ZOMBIE : announcer(port : Option[String], scheme: String) : " + port + " // " + scheme)
+    announcer(port.get,scheme)
+  }
+
+  def announcer(port : String, scheme: String) : Unit = {
+    // todo: convert 'port' to int.
+    //announcer(portConverted,scheme)
+    println("ZOMBIE : announcer(port : String, scheme: String) : " + port + " // " + scheme)
+    val tmp = if (port.startsWith(":")) {
+      port.substring(1)
+    }
+    else {
+      port
+    }
+    if (tmp.trim.length>0) {
+      try { announcer(tmp.toInt,scheme) }
+      catch { case _ : Exception => println("ZOMBIE :: I HAVE AN EXCEPTION!!!!") }
+    }
+  }
+
+  def announcer(port : Int, scheme: String) : Unit = {
+
+    println("ZOMBIE : announcer(port : Int, scheme: String) : " + port + " // " + scheme)
+
+    val networkInterfaces = NetworkInterface.getNetworkInterfaces
+    while (networkInterfaces.hasMoreElements) {
+      val networkInterface = networkInterfaces.nextElement
+
+      if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
+        val addresses = networkInterface.getInetAddresses
+        while (addresses.hasMoreElements) {
+          val anAddress = addresses.nextElement
+          if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
+            println("ZOMBIE :: bld.address :: FINALLY!! -> " + Some(new InetSocketAddress(convertIpAddress(anAddress.getAddress), port)))
+          }
+        }
+      }
+
+    }
+  }
+
+  def myAnnouncerX(scheme : String) : Unit = {
     val address = InetAddress.getLocalHost
     println("ZOMBIE address-canonical-name : " + address.getCanonicalHostName)
     println("ZOMBIE address-host-name      : " + address.getHostName)
     println("ZOMBIE address-host-address   : " + address.getHostAddress)
+    println("ZOMBIE address-address        : " + address.getAddress)
 
+    println("ZOMBIE create a new SocketAddress ... " + InetSocketAddressUtil.toPublic(new InetSocketAddress(address.getHostName,2222)))
+    val nis : util.Enumeration[NetworkInterface] = NetworkInterface.getNetworkInterfaces
+    while (nis.hasMoreElements) {
+      val networkInterface = nis.nextElement()
+      println("ZOMBIE ni.displayName       : " + networkInterface.getDisplayName)
+      println("ZOMBIE ni.name              : " + networkInterface.getName)
+      //println("ZOMBIE ni.hardwareAddress   : " + convertIpAddress(networkInterface.getHardwareAddress)) // MAC address
+      println("ZOMBIE ni                   : " + networkInterface)
+      println("ZOMBIE ni.isLoopback        : " + networkInterface.isLoopback)
+      println("ZOMBIE ni.isPointToPoint    : " + networkInterface.isPointToPoint)
+      println("ZOMBIE ni.isUp              : " + networkInterface.isUp)
+      println("ZOMBIE ni.isVirtual         : " + networkInterface.isVirtual)
+
+      val theAddresses = networkInterface.getInetAddresses
+      while (theAddresses.hasMoreElements) {
+        val tAddr = theAddresses.nextElement();
+        if (tAddr.isInstanceOf[Inet4Address] && !tAddr.isLoopbackAddress) {
+          println("ZOMBIE :: tAddr:: FINALLY!! -> " + Some(new InetSocketAddress(convertIpAddress(tAddr.getAddress), 10)))
+        }
+      }
+      //println("ZOMBIE ni.parent.displayName = : " + networkInterface.getParent.getDisplayName)
+    }
     val endpointAddress = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
-
+    //val socketAddress = getLocalAddressByName
     println("ZOMBIE zk endpointAddress     : " + endpointAddress)
+    //NetworkInterface.getByName().
+    val interface = NetworkInterface.getByName("enp109s0f1")
+    val addresses = interface.getInetAddresses
+    while (addresses.hasMoreElements) {
+      var addr = addresses.nextElement()
+      println("ZOMBIE :: addr.getAddress : " + convertIpAddress(addr.getAddress))
+      if (addr.isInstanceOf[Inet4Address] && !addr.isLoopbackAddress) {
+        println("ZOMBIE :: addr -> " + Some(new InetSocketAddress(convertIpAddress(addr.getAddress), 1010)))
+      }
+    }
+
+    //InetAddress.
   }
 
   /**

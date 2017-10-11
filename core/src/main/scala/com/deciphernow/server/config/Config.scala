@@ -53,8 +53,9 @@ package admin {
   */
 package thrift {
 
-  object port extends GlobalFlag(":9090", "Thrift Port")
-
+  // shouldn't this be: GlobalFlag[String]?
+  //object port extends GlobalFlag(":9090", "Thrift Port")
+  object port extends GlobalFlag[String](":9090", "Thrift Port")
 }
 
 /**
