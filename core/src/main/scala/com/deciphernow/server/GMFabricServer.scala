@@ -89,11 +89,13 @@ abstract class GMFabricServer extends App {
 
         println("ZOMBIE :: Admin server bound to: " + InetSocketAddressUtil.toPublic(restServer.get.adminBoundAddress))
 
-        println("ZOMBIE :: hostname = " + restServer.get.adminBoundAddress.getHostName)
-        println("ZOMBIE :: direct InetAddress request = " + InetAddress.getLocalHost)
-        println("ZOMBIE :: port for admin => " + restServer.get.defaultHttpPort)
-        println("ZOMBIE :: port for http  => " + restServer.get.defaultFinatraHttpPort)
-        println("ZOMBIE :: port for https => " + restServer.get.defaultHttpsPort)
+        println("ZOMBIE :: hostname                                         = " + restServer.get.adminBoundAddress.getHostName)
+        println("ZOMBIE :: direct InetAddress.localhost request             = " + InetAddress.getLocalHost)
+        println("ZOMBIE :: direct InetAddress.localhost.hostname request    = " + InetAddress.getLocalHost.getHostName)
+        println("ZOMBIE :: direct InetAddress.localhost.hostaddress request = " + InetAddress.getLocalHost.getHostAddress)
+        println("ZOMBIE :: port for admin                                   = " + restServer.get.defaultHttpPort)
+        println("ZOMBIE :: port for http                                    = " + restServer.get.defaultFinatraHttpPort)
+        println("ZOMBIE :: port for https                                   = " + restServer.get.defaultHttpsPort)
 
 // only do if zk configured.
         announcer(restServer.get.getAdminPort,"admin")
@@ -176,15 +178,39 @@ abstract class GMFabricServer extends App {
       while (networkInterfaces.hasMoreElements) {
         val networkInterface = networkInterfaces.nextElement
 
+        println("ZOMBIE ni.displayName       : " + networkInterface.getDisplayName)
+        println("ZOMBIE ni.name              : " + networkInterface.getName)
+        //println("ZOMBIE ni.hardwareAddress   : " + convertIpAddress(networkInterface.getHardwareAddress)) // MAC address
+        println("ZOMBIE ni                   : " + networkInterface)
+        println("ZOMBIE ni.isLoopback        : " + networkInterface.isLoopback)
+        println("ZOMBIE ni.isPointToPoint    : " + networkInterface.isPointToPoint)
+        println("ZOMBIE ni.isUp              : " + networkInterface.isUp)
+        println("ZOMBIE ni.isVirtual         : " + networkInterface.isVirtual)
+
         if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
           val addresses = networkInterface.getInetAddresses
           while (addresses.hasMoreElements) {
             val anAddress = addresses.nextElement
+
             if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
-              configuration.ipAddress.enableIpAddressResolution
-              val tmp = if (useIpAddressResolution) { convertIpAddress(anAddress.getAddress) }
-                        else { anAddress.getHostName }
-              println("ZOMBIE :: bld.address :: FINALLY!! -> " + Some(new InetSocketAddress(tmp, port)))
+              println("ZOMBIE :: anAddress = " + anAddress)
+              println("ZOMBIE :: useIpAddressResolution => " + useIpAddressResolution)
+              val tmp = if (useIpAddressResolution) {
+                println("ZOMBIE :: useIpAddressResolution - convertIpAddress")
+                convertIpAddress(anAddress.getAddress)
+              }
+              else {
+                println("ZOMBIE :: useIpAddressResolution - anAddress.getHostName")
+                //anAddress.getHostName
+                InetAddress.getLocalHost.getHostName
+              }
+              println("ZOMBIE :: tmp => ",tmp)
+              val newSocket = new InetSocketAddress(tmp, port)
+              println("ZOMBIE :: bld.address :: FINALLY!! -> " + newSocket)
+              val announcementPoint = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
+              val ann = Announcer.announce(newSocket, announcementPoint)
+              announcements ::= ann
+              ann
             }
           }
         }
@@ -196,7 +222,7 @@ abstract class GMFabricServer extends App {
 
   }
 
-  def myAnnouncerX(scheme : String) : Unit = {
+  def _myAnnouncerX(scheme : String) : Unit = {
     val address = InetAddress.getLocalHost
     println("ZOMBIE address-canonical-name : " + address.getCanonicalHostName)
     println("ZOMBIE address-host-name      : " + address.getHostName)
