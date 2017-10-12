@@ -96,6 +96,14 @@
     </build>
 
     <dependencies>
+
+        <dependency> <!-- todo: verify that I need ZK explicitly. -->
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.5.0-alpha</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>twitter-server_${version.scala.major}</artifactId>

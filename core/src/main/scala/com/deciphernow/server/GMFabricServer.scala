@@ -53,11 +53,7 @@ abstract class GMFabricServer extends App {
 
     log.ifDebug("Main starting up ... ")
 
-    useIpAddressResolution = configuration.ipAddress.enableIpAddressResolution.get.fold(false)(_ => true)
-    networkInterfaceName = configuration.ipAddress.useNetworkInterfaceName.get.fold("")(definedInterfaceName => definedInterfaceName)
-    haveNetworkInterfaceName = (networkInterfaceName.trim.length > 0)
-
-    identifyHostOrIP
+    GMFNetworkConfiguration.identifyHostOrIP
 
     sys.addShutdownHook(close(Time.fromSeconds(2)))
 
@@ -85,13 +81,9 @@ abstract class GMFabricServer extends App {
 
   }
 
-  var useIpAddressResolution : Boolean = false
-  var networkInterfaceName : String = ""
-  var haveNetworkInterfaceName : Boolean = false
   private[this] var announcements = List.empty[Future[Announcement]]
 
-  // Hostname or IPAddress to be used to for endpoints.
-  var announceThis : String = ""
+  // todo: move our 'announcer' code out into it's own 'object'
 
   /**
     * Registers endpoint with ZK.
@@ -129,69 +121,8 @@ abstract class GMFabricServer extends App {
     */
   def announcer(port : Int, scheme: String) : Unit = {
     val announcementPoint = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
-    val ann = Announcer.announce(new InetSocketAddress(announceThis, port), announcementPoint)
+    val ann = Announcer.announce(new InetSocketAddress(GMFNetworkConfiguration.announce, port), announcementPoint)
     announcements ::= ann
   }
-
-
-  /**
-    * Looks up a specific interface to be used for registration to ZK.
-    * @param networkInterface
-    */
-  def getNetworkInfo(networkInterface: Option[NetworkInterface]) : Unit = {
-    networkInterface match {
-      case Some(v) => findNetworkInfo(v)
-      case None => log.ifInfo("NetworkInterface [" + networkInterfaceName + "] is NULL. Shutting down!")
-        System.exit(-1)
-    }
-  }
-
-  /**
-    * Iterates through the interfaces for a network looking for a valid interface to register with ZK.
-    * @param networkInterface
-    */
-  def findNetworkInfo(networkInterface: NetworkInterface) : Unit = {
-
-    if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
-      val addresses = networkInterface.getInetAddresses
-
-      while (addresses.hasMoreElements && !(announceThis.trim.length > 0)) {
-        val anAddress = addresses.nextElement
-
-        if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
-          announceThis = if (useIpAddressResolution) { convertIpAddress(anAddress.getAddress) }
-          else { InetAddress.getLocalHost.getHostName}
-        }
-      }
-    }
-  }
-
-  /**
-    * Register either the Hostname or IP Address for service endpoints to ZK.
-    */
-  def identifyHostOrIP : Unit = {
-    if (!configuration.zk.zookeeperConnection().isEmpty && !configuration.zk.announcementPoint().isEmpty) {
-      if (haveNetworkInterfaceName) {
-        getNetworkInfo(Option(NetworkInterface.getByName(networkInterfaceName)))
-      }
-      else {
-        val networkInterfaces = NetworkInterface.getNetworkInterfaces
-        while (networkInterfaces.hasMoreElements && !(announceThis.trim.length > 0)) {
-          findNetworkInfo(networkInterfaces.nextElement)
-        }
-      }
-    }
-    else {
-      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
-    }
-  }
-
-  /**
-    * Convert the byte array representation of the IPv4 address to a string.
-    *
-    * @param rawBytes
-    * @return
-    */
-  def convertIpAddress(rawBytes: Array[Byte]) : String = rawBytes.map(n => n & 0xFF).mkString(".")
 
 }
