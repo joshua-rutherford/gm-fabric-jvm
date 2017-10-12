@@ -59,6 +59,19 @@ abstract class GMFabricServer extends App {
 
     useIpAddressResolution = configuration.ipAddress.enableIpAddressResolution.get.fold(false)(_ => true)
     networkInterfaceName = configuration.ipAddress.useNetworkInterfaceName.get.fold("")(definedInterfaceName => definedInterfaceName)
+    //haveNetworkInterfaceName = if (networkInterfaceName.trim.length > 0) { return true; } else { return false; }
+
+
+//    haveNetworkInterfaceName = if (networkInterfaceName.trim.length > 0) {
+//      true
+//    }
+//    else {
+//      false
+//    }
+    haveNetworkInterfaceName = (networkInterfaceName.trim.length > 0)
+
+
+    identifyHostOrIP
 
     sys.addShutdownHook(close(Time.fromSeconds(2)))
 
@@ -126,8 +139,10 @@ abstract class GMFabricServer extends App {
 
   var useIpAddressResolution : Boolean = false
   var networkInterfaceName : String = ""
+  var haveNetworkInterfaceName : Boolean = false
   private[this] var announcements = List.empty[Future[Announcement]]
 
+  var announceThis : String = ""
 
   def announcer(port : Option[String], scheme: String) : Unit = {
     println("ZOMBIE : announcer(port : Option[String], scheme: String) : " + port + " // " + scheme)
@@ -146,7 +161,255 @@ abstract class GMFabricServer extends App {
     }
     if (tmp.trim.length>0) {
       try {
+
         announcer(tmp.toInt,scheme)
+        //        if (configuration.ipAddress.enableIpAddressResolution.get.get) {
+        //          announcerIpAddress(tmp.toInt,scheme)
+        //        }
+        //        else {
+        //          announcerHostname(tmp.toInt,scheme)
+        //        }
+      }
+      catch { case _ : Exception => println("ZOMBIE :: I HAVE AN EXCEPTION!!!!") }
+    }
+  }
+  def announcer(port : Int, scheme: String) : Unit = {
+    println("ZOMBIE :: announceThis " + announceThis + ":" + port + " for service-type :" + scheme )
+    val announcementPoint = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
+    val ann = Announcer.announce(new InetSocketAddress(announceThis, port), announcementPoint)
+    announcements ::= ann
+    //ann // does this actuall announce????
+  }
+
+
+  def getNetworkInfo(networkInterface: Option[NetworkInterface]) = {
+    networkInterface match {
+      case Some(v) => findNetworkInfo(v)
+      case None => println("ZOMBIE .... networkInterface is NULL == capture failure.")
+    }
+  }
+
+  def findNetworkInfo(networkInterface: NetworkInterface) = {
+
+    println("ZOMBIE ni.displayName       : " + networkInterface.getDisplayName)
+    println("ZOMBIE ni.name              : " + networkInterface.getName)
+    //println("ZOMBIE ni.hardwareAddress   : " + convertIpAddress(networkInterface.getHardwareAddress)) // MAC address
+    println("ZOMBIE ni                   : " + networkInterface)
+    println("ZOMBIE ni.isLoopback        : " + networkInterface.isLoopback)
+    println("ZOMBIE ni.isPointToPoint    : " + networkInterface.isPointToPoint)
+    println("ZOMBIE ni.isUp              : " + networkInterface.isUp)
+    println("ZOMBIE ni.isVirtual         : " + networkInterface.isVirtual)
+
+    if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
+      val addresses = networkInterface.getInetAddresses
+      //var breakOutOfLoop = breakOut
+
+      while (addresses.hasMoreElements && !(announceThis.trim.length > 0)) {
+        val anAddress = addresses.nextElement
+
+        if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
+          println("ZOMBIE :: anAddress = " + anAddress)
+          println("ZOMBIE :: useIpAddressResolution => " + useIpAddressResolution)
+          announceThis = if (useIpAddressResolution) {
+            println("ZOMBIE :: useIpAddressResolution - convertIpAddress")
+            convertIpAddress(anAddress.getAddress)
+          }
+          else {
+            println("ZOMBIE :: useIpAddressResolution - anAddress.getHostName")
+            //anAddress.getHostName
+            InetAddress.getLocalHost.getHostName
+          }
+          println("ZOMBIE :: announceThis => ",announceThis)
+          //breakOut = (announceThis.trim.length > 0)
+        }
+      }
+    }
+  }
+  def identifyHostOrIP : Unit = {
+    //var finished = false;
+
+
+    if (!configuration.zk.zookeeperConnection().isEmpty && !configuration.zk.announcementPoint().isEmpty) {
+      println("ZOMBIE networkInterfaceName          = " + networkInterfaceName)
+      println("ZOMBIE do I use networkInterfaceName = " + haveNetworkInterfaceName)
+      if (haveNetworkInterfaceName) {
+        getNetworkInfo(Option(NetworkInterface.getByName(networkInterfaceName)))
+      }
+      else {
+        val networkInterfaces = NetworkInterface.getNetworkInterfaces
+
+        //Enumeration[NetworkInterface] tmp = new Enumeration[NetworkInterface] {(NetworkInterface.getByName(networkInterfaceName))}
+
+        while (networkInterfaces.hasMoreElements && !(announceThis.trim.length > 0)) {
+
+          //val networkInterface = networkInterfaces.nextElement
+
+          //        println("ZOMBIE ni.displayName       : " + networkInterface.getDisplayName)
+          //        println("ZOMBIE ni.name              : " + networkInterface.getName)
+          //        //println("ZOMBIE ni.hardwareAddress   : " + convertIpAddress(networkInterface.getHardwareAddress)) // MAC address
+          //        println("ZOMBIE ni                   : " + networkInterface)
+          //        println("ZOMBIE ni.isLoopback        : " + networkInterface.isLoopback)
+          //        println("ZOMBIE ni.isPointToPoint    : " + networkInterface.isPointToPoint)
+          //        println("ZOMBIE ni.isUp              : " + networkInterface.isUp)
+          //        println("ZOMBIE ni.isVirtual         : " + networkInterface.isVirtual)
+
+          findNetworkInfo(networkInterfaces.nextElement)
+          //        if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
+          //          val addresses = networkInterface.getInetAddresses
+          //          //var breakOutOfLoop = breakOut
+          //
+          //          while (addresses.hasMoreElements && !(announceThis.trim.length > 0)) {
+          //            val anAddress = addresses.nextElement
+          //
+          //            if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
+          //              println("ZOMBIE :: anAddress = " + anAddress)
+          //              println("ZOMBIE :: useIpAddressResolution => " + useIpAddressResolution)
+          //              announceThis = if (useIpAddressResolution) {
+          //                println("ZOMBIE :: useIpAddressResolution - convertIpAddress")
+          //                convertIpAddress(anAddress.getAddress)
+          //              }
+          //              else {
+          //                println("ZOMBIE :: useIpAddressResolution - anAddress.getHostName")
+          //                //anAddress.getHostName
+          //                InetAddress.getLocalHost.getHostName
+          //              }
+          //              println("ZOMBIE :: announceThis => ",announceThis)
+          //              //breakOut = (announceThis.trim.length > 0)
+          //            }
+          //          }
+          //        }
+          //breakOut = (announceThis.trim.length > 0)
+        }
+      }
+      //var breakOut = false
+//      val networkInterfaces = NetworkInterface.getNetworkInterfaces
+//
+//      //Enumeration[NetworkInterface] tmp = new Enumeration[NetworkInterface] {(NetworkInterface.getByName(networkInterfaceName))}
+//
+//      while (networkInterfaces.hasMoreElements && !(announceThis.trim.length > 0)) {
+//
+//        //val networkInterface = networkInterfaces.nextElement
+//
+////        println("ZOMBIE ni.displayName       : " + networkInterface.getDisplayName)
+////        println("ZOMBIE ni.name              : " + networkInterface.getName)
+////        //println("ZOMBIE ni.hardwareAddress   : " + convertIpAddress(networkInterface.getHardwareAddress)) // MAC address
+////        println("ZOMBIE ni                   : " + networkInterface)
+////        println("ZOMBIE ni.isLoopback        : " + networkInterface.isLoopback)
+////        println("ZOMBIE ni.isPointToPoint    : " + networkInterface.isPointToPoint)
+////        println("ZOMBIE ni.isUp              : " + networkInterface.isUp)
+////        println("ZOMBIE ni.isVirtual         : " + networkInterface.isVirtual)
+//
+//        findNetworkInfo(networkInterfaces.nextElement)
+////        if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
+////          val addresses = networkInterface.getInetAddresses
+////          //var breakOutOfLoop = breakOut
+////
+////          while (addresses.hasMoreElements && !(announceThis.trim.length > 0)) {
+////            val anAddress = addresses.nextElement
+////
+////            if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
+////              println("ZOMBIE :: anAddress = " + anAddress)
+////              println("ZOMBIE :: useIpAddressResolution => " + useIpAddressResolution)
+////              announceThis = if (useIpAddressResolution) {
+////                println("ZOMBIE :: useIpAddressResolution - convertIpAddress")
+////                convertIpAddress(anAddress.getAddress)
+////              }
+////              else {
+////                println("ZOMBIE :: useIpAddressResolution - anAddress.getHostName")
+////                //anAddress.getHostName
+////                InetAddress.getLocalHost.getHostName
+////              }
+////              println("ZOMBIE :: announceThis => ",announceThis)
+////              //breakOut = (announceThis.trim.length > 0)
+////            }
+////          }
+////        }
+//        //breakOut = (announceThis.trim.length > 0)
+//      }
+
+    }
+    else {
+      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
+    }
+  }
+
+  def identifyHostOrIP_XXX : Unit = {
+    // println("ZOMBIE : announcer(port : Int, scheme: String) : " + port + " // " + scheme)
+
+    if (!configuration.zk.zookeeperConnection().isEmpty && !configuration.zk.announcementPoint().isEmpty) {
+      val networkInterfaces = NetworkInterface.getNetworkInterfaces
+      println("ZOMBIE networkInterfaceName          = " + networkInterfaceName)
+      println("ZOMBIE do I use networkInterfaceName = " + haveNetworkInterfaceName)
+      //Enumeration[NetworkInterface] tmp = new Enumeration[NetworkInterface] {(NetworkInterface.getByName(networkInterfaceName))}
+      var breakOut = false
+
+      while (networkInterfaces.hasMoreElements && !breakOut) {
+
+        val networkInterface = networkInterfaces.nextElement
+
+        println("ZOMBIE ni.displayName       : " + networkInterface.getDisplayName)
+        println("ZOMBIE ni.name              : " + networkInterface.getName)
+        //println("ZOMBIE ni.hardwareAddress   : " + convertIpAddress(networkInterface.getHardwareAddress)) // MAC address
+        println("ZOMBIE ni                   : " + networkInterface)
+        println("ZOMBIE ni.isLoopback        : " + networkInterface.isLoopback)
+        println("ZOMBIE ni.isPointToPoint    : " + networkInterface.isPointToPoint)
+        println("ZOMBIE ni.isUp              : " + networkInterface.isUp)
+        println("ZOMBIE ni.isVirtual         : " + networkInterface.isVirtual)
+
+        if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
+          val addresses = networkInterface.getInetAddresses
+          while (addresses.hasMoreElements) {
+            val anAddress = addresses.nextElement
+
+            if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
+              println("ZOMBIE :: anAddress = " + anAddress)
+              println("ZOMBIE :: useIpAddressResolution => " + useIpAddressResolution)
+              announceThis = if (useIpAddressResolution) {
+                println("ZOMBIE :: useIpAddressResolution - convertIpAddress")
+                convertIpAddress(anAddress.getAddress)
+              }
+              else {
+                println("ZOMBIE :: useIpAddressResolution - anAddress.getHostName")
+                //anAddress.getHostName
+                InetAddress.getLocalHost.getHostName
+              }
+              println("ZOMBIE :: announceThis => ",announceThis)
+//              val newSocket = new InetSocketAddress(tmp, port)
+//              println("ZOMBIE :: bld.address :: FINALLY!! -> " + newSocket)
+//              val announcementPoint = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
+//              val ann = Announcer.announce(newSocket, announcementPoint)
+//              announcements ::= ann
+//              ann
+            }
+          }
+        }
+        breakOut = (announceThis.trim.length > 0)
+      }
+
+    }
+    else {
+      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
+    }
+  }
+
+  def announcerXXX(port : Option[String], scheme: String) : Unit = {
+    println("ZOMBIE : announcer(port : Option[String], scheme: String) : " + port + " // " + scheme)
+    announcerXXX(port.get,scheme)
+  }
+
+  def announcerXXX(port : String, scheme: String) : Unit = {
+    // todo: convert 'port' to int.
+    //announcer(portConverted,scheme)
+    println("ZOMBIE : announcer(port : String, scheme: String) : " + port + " // " + scheme)
+    val tmp = if (port.startsWith(":")) {
+      port.substring(1)
+    }
+    else {
+      port
+    }
+    if (tmp.trim.length>0) {
+      try {
+        announcerXXX(tmp.toInt,scheme)
 //        if (configuration.ipAddress.enableIpAddressResolution.get.get) {
 //          announcerIpAddress(tmp.toInt,scheme)
 //        }
@@ -169,12 +432,17 @@ abstract class GMFabricServer extends App {
 //
 //  }
 
-  def announcer(port : Int, scheme: String) : Unit = {
+
+
+  def announcerXXX(port : Int, scheme: String) : Unit = {
 
     println("ZOMBIE : announcer(port : Int, scheme: String) : " + port + " // " + scheme)
 
     if (!configuration.zk.zookeeperConnection().isEmpty && !configuration.zk.announcementPoint().isEmpty) {
       val networkInterfaces = NetworkInterface.getNetworkInterfaces
+      println("ZOMBIE networkInterfaceName          = " + networkInterfaceName)
+      println("ZOMBIE do I use networkInterfaceName = " + haveNetworkInterfaceName)
+      //Enumeration[NetworkInterface] tmp = new Enumeration[NetworkInterface] {(NetworkInterface.getByName(networkInterfaceName))}
       while (networkInterfaces.hasMoreElements) {
         val networkInterface = networkInterfaces.nextElement
 
