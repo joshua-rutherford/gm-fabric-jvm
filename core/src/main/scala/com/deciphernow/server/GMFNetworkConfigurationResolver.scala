@@ -4,7 +4,7 @@ import java.net.{Inet4Address, InetAddress, NetworkInterface}
 
 import com.deciphernow.server.{config => serverConfig}
 import com.deciphernow.announcement.{config => announcementConfig}
-import com.deciphernow.server.GMFNetworkConfiguration.log
+import com.twitter.logging.Logger
 
 /*
     Copyright 2017 Decipher Technology Studios LLC
@@ -26,6 +26,8 @@ import com.deciphernow.server.GMFNetworkConfiguration.log
   *
   */
 object GMFNetworkConfigurationResolver {
+
+  val log = Logger.get(getClass)
 
   var haveAnnouncementPoints = false;
   var haveBindPoints = false;
@@ -57,7 +59,8 @@ object GMFNetworkConfigurationResolver {
   def getAnnounceThriftPort = announceThriftPort
 
   /**
-    *
+    * Figure out which set of configuration parameters are to be used to announce the service endpoints &&
+    * which configuration parameters are used to bind.
     */
   def resolveConfiguration = {
     resolveAnnouncementEnvironmentVars
@@ -76,17 +79,17 @@ object GMFNetworkConfigurationResolver {
 
       identifyHostOrIP
 
-      bindHttpPort   = serverConfig.rest.httpPort.apply
-      bindHttpsPort  = serverConfig.rest.httpsPort.apply
-      bindAdminPort  = serverConfig.admin.port.apply
-      bindThriftPort = serverConfig.thrift.port.apply
+      bindHttpPort   = addTwitterNuance(serverConfig.rest.httpPort.apply)
+      bindHttpsPort  = addTwitterNuance(serverConfig.rest.httpsPort.apply)
+      bindAdminPort  = addTwitterNuance(serverConfig.admin.port.apply)
+      bindThriftPort = addTwitterNuance(serverConfig.thrift.port.apply)
 
       if (!haveAnnouncementPoints) {
         announceHostname   = announceThis
-        announceAdminPort  = cleanup(bindAdminPort)
-        announceHttpPort   = cleanup(bindHttpPort)
-        announceHttpsPort  = cleanup(bindHttpsPort)
-        announceThriftPort = cleanup(bindThriftPort)
+        announceAdminPort  = filterTwitterNuance(bindAdminPort)
+        announceHttpPort   = filterTwitterNuance(bindHttpPort)
+        announceHttpsPort  = filterTwitterNuance(bindHttpsPort)
+        announceThriftPort = filterTwitterNuance(bindThriftPort)
       }
     }
   }
@@ -112,18 +115,18 @@ object GMFNetworkConfigurationResolver {
     if (haveBindPoints) {
 
       hostname       = hostnameValue
-      bindAdminPort  = adminValue
-      bindHttpPort   = httpValue
-      bindHttpsPort  = httpsValue
-      bindThriftPort = thriftValue
+      bindAdminPort  = addTwitterNuance(adminValue)
+      bindHttpPort   = addTwitterNuance(httpValue)
+      bindHttpsPort  = addTwitterNuance(httpsValue)
+      bindThriftPort = addTwitterNuance(thriftValue)
 
       if (!haveAnnouncementPoints) {
 
         announceHostname   = announceThis
-        announceAdminPort  = cleanup(adminValue)
-        announceHttpPort   = cleanup(httpValue)
-        announceHttpsPort  = cleanup(httpsValue)
-        announceThriftPort = cleanup(thriftValue)
+        announceAdminPort  = filterTwitterNuance(adminValue)
+        announceHttpPort   = filterTwitterNuance(httpValue)
+        announceHttpsPort  = filterTwitterNuance(httpsValue)
+        announceThriftPort = filterTwitterNuance(thriftValue)
       }
     }
 
@@ -145,10 +148,10 @@ object GMFNetworkConfigurationResolver {
 
       if (haveAnnouncementPoints) {
         announceHostname   = hostnameValue
-        announceAdminPort  = cleanup(adminValue)
-        announceHttpPort   = cleanup(httpValue)
-        announceHttpsPort  = cleanup(httpsValue)
-        announceThriftPort = cleanup(thriftValue)
+        announceAdminPort  = filterTwitterNuance(adminValue)
+        announceHttpPort   = filterTwitterNuance(httpValue)
+        announceHttpsPort  = filterTwitterNuance(httpsValue)
+        announceThriftPort = filterTwitterNuance(thriftValue)
       }
     }
   }
@@ -168,22 +171,22 @@ object GMFNetworkConfigurationResolver {
 
     if (haveAnnouncementPoints) {
       announceHostname   = hostnameValue
-      announceAdminPort  = cleanup(adminValue)
-      announceHttpPort   = cleanup(httpValue)
-      announceHttpsPort  = cleanup(httpsValue)
-      announceThriftPort = cleanup(thriftValue)
+      announceAdminPort  = filterTwitterNuance(adminValue)
+      announceHttpPort   = filterTwitterNuance(httpValue)
+      announceHttpsPort  = filterTwitterNuance(httpsValue)
+      announceThriftPort = filterTwitterNuance(thriftValue)
     }
   }
 
   /**
-    *
+    * Retrieve the value from the environment variable. Return empty String if None.
     * @param env
     * @return
     */
   protected [this] def envValue(env: Option[String]) = env.flatMap{value => sys.env.get(value)}.getOrElse("")
 
   /**
-    *
+    * Retrieve the value from the Option. Return empty String if it is None.
     * @param config
     * @return
     */
@@ -195,15 +198,37 @@ object GMFNetworkConfigurationResolver {
   }
 
   /**
+    * For ports to be be bound, twitter expects the port values to start with ':'. Remove said value if going
+    * to announce the port.
     *
     * @param value
     * @return
     */
-  protected [this] def cleanup(value: String) = {
+  protected [this] def filterTwitterNuance(value: String) = {
     val v = if (value.trim.length>0) {
       value.startsWith(":") match {
         case true => value.substring(1)
         case false => value
+      }
+    }
+    else {
+      value
+    }
+    v
+  }
+
+  /**
+    * For ports to be bound, twitter expects the port values to start with ':'. Pre-append the port with ':'
+    * if it is missing.
+    * 
+    * @param value
+    * @return
+    */
+  protected [this] def addTwitterNuance(value: String) = {
+    val v = if (value.trim.length>0) {
+      value.startsWith(":") match {
+        case true => value
+        case false => ":" + value
       }
     }
     else {
@@ -220,11 +245,6 @@ object GMFNetworkConfigurationResolver {
   useIpAddressResolution = serverConfig.ipAddress.enableIpAddressResolution.get.fold(false)(_ => true)
   networkInterfaceName = serverConfig.ipAddress.useNetworkInterfaceName.get.fold("")(definedInterfaceName => definedInterfaceName)
   haveNetworkInterfaceName = (networkInterfaceName.trim.length > 0)
-
-  //def announce = announceThis
-
-
-
 
   /**
     * Looks up a specific interface to be used for registration to ZK.

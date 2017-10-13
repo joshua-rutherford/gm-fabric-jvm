@@ -17,15 +17,11 @@ package com.deciphernow.server
     limitations under the License.
 */
 
-import java.net._
-
 import com.deciphernow.server.rest.GMFabricRestServer
 import com.deciphernow.server.thrift.GMFabricThriftServer
 import com.twitter.app.App
-import com.twitter.finagle._
 import com.twitter.logging.Logger
-import com.twitter.util.{Future, Time}
-import com.deciphernow.server.{config => configuration}
+import com.twitter.util.Time
 
 /**
   * Created by ghershfield on 4/19/16.
@@ -54,7 +50,6 @@ abstract class GMFabricServer extends App {
     log.ifDebug("Main starting up ... ")
 
     GMFNetworkConfigurationResolver.resolveConfiguration
-    //GMFNetworkConfiguration.identifyHostOrIP
 
     sys.addShutdownHook(close(Time.fromSeconds(2)))
 
@@ -81,48 +76,5 @@ abstract class GMFabricServer extends App {
     }
 
   }
-
-//  private[this] var announcements = List.empty[Future[Announcement]]
-//
-//  // todo: move our 'announcer' code out into it's own 'object'
-//
-//  /**
-//    * Registers endpoint with ZK.
-//    * @param port
-//    * @param scheme
-//    */
-//  def announcer(port : Option[String], scheme: String) : Unit = announcer(port.get,scheme)
-//
-//
-//  /**
-//    * Registers endpoint with ZK.
-//    * @param port
-//    * @param scheme
-//    */
-//  def announcer(port : String, scheme: String) : Unit = {
-//    val tmp = if (port.startsWith(":")) {
-//      port.substring(1)
-//    }
-//    else {
-//      port
-//    }
-//    if (tmp.trim.length>0) {
-//      try {
-//        announcer(tmp.toInt,scheme)
-//      }
-//      catch { case e : Exception => log.ifInfo(e) }
-//    }
-//  }
-//
-//  /**
-//    * Registers endpoint with ZK.
-//    * @param port
-//    * @param scheme
-//    */
-//  def announcer(port : Int, scheme: String) : Unit = {
-//    val announcementPoint = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
-//    val ann = Announcer.announce(new InetSocketAddress(GMFNetworkConfigurationResolver.getAnnounceHostname, port), announcementPoint)
-//    announcements ::= ann
-//  }
 
 }

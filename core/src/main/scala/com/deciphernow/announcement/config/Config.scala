@@ -19,10 +19,11 @@ package com.deciphernow.announcement.config
 */
 
 import com.twitter.app.GlobalFlag
-//import com.deciphernow.announcement.config.Implicits.stringOptionFlaggable
 import com.deciphernow.server.Implicits.stringOptionFlaggable
 
-// if these not set: fall back to 'service.forward'
+/**
+  *
+  */
 package os.env {
   object hostname extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the 'hostname' or 'ipAddress'")
   object adminPort extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the admin port.")
@@ -31,7 +32,9 @@ package os.env {
   object thriftPort extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the thrift port.")
 }
 
-// if not set: fall back to 'server.config.env':
+/**
+  *
+  */
 package service.forward {
   object hostname extends GlobalFlag[Option[String]](None, "'hostname' or 'ipAddress' to be registered. If None then current hostname.")
   object adminPort extends GlobalFlag[Option[String]](None, "Admin port to announce.")
@@ -40,5 +43,4 @@ package service.forward {
   object thriftPort extends GlobalFlag[Option[String]](None, "Thrift port to announce.")
 }
 
-// if 'server.config.env' not set: fall back to regular configuration.
 
