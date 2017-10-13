@@ -1,7 +1,26 @@
 package com.deciphernow.server
 
-import com.deciphernow.server.{ config => serverConfig }
-import com.deciphernow.announcement.{ config => announcementConfig }
+import java.net.{Inet4Address, InetAddress, NetworkInterface}
+
+import com.deciphernow.server.{config => serverConfig}
+import com.deciphernow.announcement.{config => announcementConfig}
+import com.deciphernow.server.GMFNetworkConfiguration.log
+
+/*
+    Copyright 2017 Decipher Technology Studios LLC
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 
 /**
   *
@@ -9,13 +28,7 @@ import com.deciphernow.announcement.{ config => announcementConfig }
 object GMFNetworkConfigurationResolver {
 
   var haveAnnouncementPoints = false;
-  /*
-  - 1 : Set ports && hostname via : com.deciphernow.server.config.{admin,http,https,thrift} ports.
-  - 2 : Look up for env and if exist && have values ... override [1]
-  - 3 : if 'service.forward' set then over ...          overrice [2]
-  - 4 : if 'os.env' set && have values ...              override [3]
-   */
-  // todo: do I make the ports 'Int' && if not set then -1?
+  var haveBindPoints = false;
   var hostname   : String = _
 
   var bindAdminPort  : String = _
@@ -37,60 +50,105 @@ object GMFNetworkConfigurationResolver {
   def getBindHttpsPort = bindHttpsPort
   def getBindThriftPort = bindThriftPort
 
+  def getAnnounceHostname = announceHostname
   def getAnnounceAdminPort = announceAdminPort
   def getAnnounceHttpPort  = announceHttpPort
   def getAnnounceHttpsPort = announceHttpsPort
   def getAnnounceThriftPort = announceThriftPort
 
+  /**
+    *
+    */
   def resolveConfiguration = {
     resolveAnnouncementEnvironmentVars
     resolveAnnouncementConfiguration
+    resolveBindEnvironmentVars
     resolveBindConfiguration
   }
 
-  // todo: if have useIpAddress ... only works if we are @ level 1.
+  /**
+    *
+    */
   protected [this] def resolveBindConfiguration = {
 
     // if none are configured then bind && with these values.
+    if (!haveBindPoints) {
 
-    bindHttpPort = serverConfig.rest.httpPort.apply
-    bindHttpsPort = serverConfig.rest.httpsPort.apply
-    bindAdminPort = serverConfig.admin.port.apply
-    bindThriftPort = serverConfig.thrift.port.apply
+      identifyHostOrIP
 
-    if (!haveAnnouncementPoints) {
-      // todo: announce the bind ports as announcment ports.
+      bindHttpPort   = serverConfig.rest.httpPort.apply
+      bindHttpsPort  = serverConfig.rest.httpsPort.apply
+      bindAdminPort  = serverConfig.admin.port.apply
+      bindThriftPort = serverConfig.thrift.port.apply
+
+      if (!haveAnnouncementPoints) {
+        announceHostname   = announceThis
+        announceAdminPort  = cleanup(bindAdminPort)
+        announceHttpPort   = cleanup(bindHttpPort)
+        announceHttpsPort  = cleanup(bindHttpsPort)
+        announceThriftPort = cleanup(bindThriftPort)
+      }
     }
-    // todo: determine the ipAddress here.
-    // if useIpAddress then set 'hostname' as IPAddress : Otherwise convert to 'IP' address.
-
-    println("resolveLevelFourConfiguration")
   }
 
-  // todo: ENV values
-  protected [this] def resolveLevelThreeConfiguration = {
-    println("resolveLevelThreeConfiguration")
+  /**
+    *
+    */
+  protected [this] def resolveBindEnvironmentVars = {
+
     // if announcement NOT configured && have ENV here ... then announcement + binding are equal to these values.
+    val hostnameValue = envValue(serverConfig.os.env.hostname.apply)
+
+    // todo: how do we handle if ENV set && useIpAddress is set?
+    identifyHostOrIP
+
+    val adminValue    = envValue(serverConfig.os.env.adminPort.apply)
+    val httpValue     = envValue(serverConfig.os.env.httpPort.apply)
+    val httpsValue    = envValue(serverConfig.os.env.httpsPort.apply)
+    val thriftValue   = envValue(serverConfig.os.env.thriftPort.apply)
+
+    haveBindPoints = ((adminValue.trim.length > 0 ) && (httpValue.trim.length > 0))
+
+    if (haveBindPoints) {
+
+      hostname       = hostnameValue
+      bindAdminPort  = adminValue
+      bindHttpPort   = httpValue
+      bindHttpsPort  = httpsValue
+      bindThriftPort = thriftValue
+
+      if (!haveAnnouncementPoints) {
+
+        announceHostname   = announceThis
+        announceAdminPort  = cleanup(adminValue)
+        announceHttpPort   = cleanup(httpValue)
+        announceHttpsPort  = cleanup(httpsValue)
+        announceThriftPort = cleanup(thriftValue)
+      }
+    }
+
   }
 
-  // These are the default announcement point values ... if configured.
   /**
     *
     */
   protected [this] def resolveAnnouncementConfiguration = {
     if (!haveAnnouncementPoints) {
-      val adminValue = configValue(announcementConfig.service.forward.adminPort.apply)
-      val httpValue = configValue(announcementConfig.service.forward.httpPort.apply)
-      val httpsValue = configValue(announcementConfig.service.forward.httpsPort.apply)
-      val thriftValue = configValue(announcementConfig.service.forward.thriftPort.apply)
+
+      val hostnameValue = configValue(announcementConfig.service.forward.hostname.apply)
+      val adminValue    = configValue(announcementConfig.service.forward.adminPort.apply)
+      val httpValue     = configValue(announcementConfig.service.forward.httpPort.apply)
+      val httpsValue    = configValue(announcementConfig.service.forward.httpsPort.apply)
+      val thriftValue   = configValue(announcementConfig.service.forward.thriftPort.apply)
 
       haveAnnouncementPoints = ((adminValue.trim.length > 0) && (httpValue.trim.length > 0))
 
       if (haveAnnouncementPoints) {
-        announceAdminPort = adminValue
-        announceHttpPort = httpValue
-        announceHttpsPort = httpsValue
-        announceThriftPort = thriftValue
+        announceHostname   = hostnameValue
+        announceAdminPort  = cleanup(adminValue)
+        announceHttpPort   = cleanup(httpValue)
+        announceHttpsPort  = cleanup(httpsValue)
+        announceThriftPort = cleanup(thriftValue)
       }
     }
   }
@@ -99,20 +157,21 @@ object GMFNetworkConfigurationResolver {
     *
     */
   protected [this] def resolveAnnouncementEnvironmentVars = {
-    val hostnameEnv = announcementConfig.os.env.hostname // todo: what to do?
 
-    val adminValue  = envValue(announcementConfig.os.env.adminPort.apply)
-    val httpValue   = envValue(announcementConfig.os.env.httpPort.apply)
-    val httpsValue  = envValue(announcementConfig.os.env.httpsPort.apply)
-    val thriftValue = envValue(announcementConfig.os.env.thriftPort.apply)
+    val hostnameValue = envValue(announcementConfig.os.env.hostname.apply)
+    val adminValue    = envValue(announcementConfig.os.env.adminPort.apply)
+    val httpValue     = envValue(announcementConfig.os.env.httpPort.apply)
+    val httpsValue    = envValue(announcementConfig.os.env.httpsPort.apply)
+    val thriftValue   = envValue(announcementConfig.os.env.thriftPort.apply)
 
     haveAnnouncementPoints = ((adminValue.trim.length > 0 ) && (httpValue.trim.length > 0))
 
     if (haveAnnouncementPoints) {
-      announceAdminPort  = adminValue
-      announceHttpPort   = httpValue
-      announceHttpsPort  = httpsValue
-      announceThriftPort = thriftValue
+      announceHostname   = hostnameValue
+      announceAdminPort  = cleanup(adminValue)
+      announceHttpPort   = cleanup(httpValue)
+      announceHttpsPort  = cleanup(httpsValue)
+      announceThriftPort = cleanup(thriftValue)
     }
   }
 
@@ -124,7 +183,7 @@ object GMFNetworkConfigurationResolver {
   protected [this] def envValue(env: Option[String]) = env.flatMap{value => sys.env.get(value)}.getOrElse("")
 
   /**
-    * 
+    *
     * @param config
     * @return
     */
@@ -135,5 +194,96 @@ object GMFNetworkConfigurationResolver {
     }
   }
 
+  /**
+    *
+    * @param value
+    * @return
+    */
+  protected [this] def cleanup(value: String) = {
+    val v = if (value.trim.length>0) {
+      value.startsWith(":") match {
+        case true => value.substring(1)
+        case false => value
+      }
+    }
+    else {
+      value
+    }
+    v
+  }
+
+  var useIpAddressResolution : Boolean = false
+  var networkInterfaceName : String = ""
+  var haveNetworkInterfaceName : Boolean = false
+  var announceThis : String = ""
+
+  useIpAddressResolution = serverConfig.ipAddress.enableIpAddressResolution.get.fold(false)(_ => true)
+  networkInterfaceName = serverConfig.ipAddress.useNetworkInterfaceName.get.fold("")(definedInterfaceName => definedInterfaceName)
+  haveNetworkInterfaceName = (networkInterfaceName.trim.length > 0)
+
+  //def announce = announceThis
+
+
+
+
+  /**
+    * Looks up a specific interface to be used for registration to ZK.
+    * @param networkInterface
+    */
+  protected [this] def getNetworkInfo(networkInterface: Option[NetworkInterface]) : Unit = {
+    networkInterface match {
+      case Some(v) => findNetworkInfo(v)
+      case None => log.ifInfo("NetworkInterface [" + networkInterfaceName + "] is NULL. Shutting down!")
+        System.exit(-1)
+    }
+  }
+
+  /**
+    * Iterates through the interfaces for a network looking for a valid interface to register with ZK.
+    * @param networkInterface
+    */
+  protected [this] def findNetworkInfo(networkInterface: NetworkInterface) : Unit = {
+
+    if (networkInterface.isUp && !networkInterface.isLoopback && !networkInterface.isVirtual) {
+      val addresses = networkInterface.getInetAddresses
+
+      while (addresses.hasMoreElements && !(announceThis.trim.length > 0)) {
+        val anAddress = addresses.nextElement
+
+        if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
+          announceThis = if (useIpAddressResolution) { convertIpAddress(anAddress.getAddress) }
+          else { InetAddress.getLocalHost.getHostName}
+        }
+      }
+    }
+  }
+
+  /**
+    * Register either the Hostname or IP Address for service endpoints to ZK.
+    */
+  def identifyHostOrIP : Unit = {
+    if (!serverConfig.zk.zookeeperConnection().isEmpty && !serverConfig.zk.announcementPoint().isEmpty) {
+      if (haveNetworkInterfaceName) {
+        getNetworkInfo(Option(NetworkInterface.getByName(networkInterfaceName)))
+      }
+      else {
+        val networkInterfaces = NetworkInterface.getNetworkInterfaces
+        while (networkInterfaces.hasMoreElements && !(announceThis.trim.length > 0)) {
+          findNetworkInfo(networkInterfaces.nextElement)
+        }
+      }
+    }
+    else {
+      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
+    }
+  }
+
+  /**
+    * Convert the byte array representation of the IPv4 address to a string.
+    *
+    * @param rawBytes
+    * @return
+    */
+  def convertIpAddress(rawBytes: Array[Byte]) : String = rawBytes.map(n => n & 0xFF).mkString(".")
 
 }

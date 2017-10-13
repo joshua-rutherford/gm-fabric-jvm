@@ -75,7 +75,7 @@ class GMFabricThriftServer(filters: Seq[SimpleFilter[Array[Byte], Array[Byte]]],
     }
   }
 
-  def defaultThriftPort: String = configuration.thrift.port()
+  def defaultThriftPort: String = GMFNetworkConfigurationResolver.getBindThriftPort //configuration.thrift.port()
 
   lazy val decrypter : Decryptor = DecryptorManager.getInstance
 }

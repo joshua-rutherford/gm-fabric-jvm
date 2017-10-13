@@ -20,11 +20,26 @@ package com.deciphernow.server.config
 import com.twitter.app.GlobalFlag
 
 
+
 /**
   *
   */
 package resources {
   object decryptClass extends GlobalFlag[String]("com.deciphernow.server.support.NoDecryptor","Class to decrypt data")
+}
+
+
+/**
+  * Environment variables that override the configuration in parameters.config.
+  *
+  */
+package os.env {
+  import com.deciphernow.server.Implicits.stringOptionFlaggable
+  object hostname extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the 'hostname' or 'ipAddress'")
+  object adminPort extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the admin port.")
+  object httpPort extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the http port.")
+  object httpsPort extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the https port.")
+  object thriftPort extends GlobalFlag[Option[String]](None, "Environment variable name that will contain the thrift port.")
 }
 
 /**

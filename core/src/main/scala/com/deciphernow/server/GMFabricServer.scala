@@ -54,11 +54,7 @@ abstract class GMFabricServer extends App {
     log.ifDebug("Main starting up ... ")
 
     GMFNetworkConfigurationResolver.resolveConfiguration
-
-    GMFNetworkConfiguration.identifyHostOrIP
-
-    // todo: this is proof of concept - remove.
-    //GMFNetworkConfigurationResolver.tester
+    //GMFNetworkConfiguration.identifyHostOrIP
 
     sys.addShutdownHook(close(Time.fromSeconds(2)))
 
@@ -68,7 +64,7 @@ abstract class GMFabricServer extends App {
         thriftServer = Option(new GMFabricThriftServer(thrift.get.filters, thrift.get.service))
         thriftServer.foreach(_ => {
           thriftServer.get.main(Array())
-          announcer(configuration.thrift.port(),"thrift")
+          GMFAnnouncer.announce(GMFNetworkConfigurationResolver.getAnnounceThriftPort,"thrift")
         })
       case _ => log.info("No thrift server defined.")
     }
@@ -77,56 +73,56 @@ abstract class GMFabricServer extends App {
       case Some(_) =>
         log.ifDebug("creating restful server.")
         restServer = Option(new GMFabricRestServer(rest.get.filters, rest.get.controllers))
-        announcer(restServer.get.getAdminPort,"admin")
-        announcer(restServer.get.getHttpPort,"http")
-        announcer(restServer.get.getHttpsPort,"https")
+        GMFAnnouncer.announce(GMFNetworkConfigurationResolver.getAnnounceAdminPort,"admin")
+        GMFAnnouncer.announce(GMFNetworkConfigurationResolver.getAnnounceHttpPort,"http")
+        GMFAnnouncer.announce(GMFNetworkConfigurationResolver.getAnnounceHttpsPort,"https")
         restServer.get.main(Array())
       case _ => log.error("No rest server defined. All services will shutdown.")
     }
 
   }
 
-  private[this] var announcements = List.empty[Future[Announcement]]
-
-  // todo: move our 'announcer' code out into it's own 'object'
-
-  /**
-    * Registers endpoint with ZK.
-    * @param port
-    * @param scheme
-    */
-  def announcer(port : Option[String], scheme: String) : Unit = announcer(port.get,scheme)
-
-
-  /**
-    * Registers endpoint with ZK.
-    * @param port
-    * @param scheme
-    */
-  def announcer(port : String, scheme: String) : Unit = {
-    val tmp = if (port.startsWith(":")) {
-      port.substring(1)
-    }
-    else {
-      port
-    }
-    if (tmp.trim.length>0) {
-      try {
-        announcer(tmp.toInt,scheme)
-      }
-      catch { case e : Exception => log.ifInfo(e) }
-    }
-  }
-
-  /**
-    * Registers endpoint with ZK.
-    * @param port
-    * @param scheme
-    */
-  def announcer(port : Int, scheme: String) : Unit = {
-    val announcementPoint = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
-    val ann = Announcer.announce(new InetSocketAddress(GMFNetworkConfiguration.announce, port), announcementPoint)
-    announcements ::= ann
-  }
+//  private[this] var announcements = List.empty[Future[Announcement]]
+//
+//  // todo: move our 'announcer' code out into it's own 'object'
+//
+//  /**
+//    * Registers endpoint with ZK.
+//    * @param port
+//    * @param scheme
+//    */
+//  def announcer(port : Option[String], scheme: String) : Unit = announcer(port.get,scheme)
+//
+//
+//  /**
+//    * Registers endpoint with ZK.
+//    * @param port
+//    * @param scheme
+//    */
+//  def announcer(port : String, scheme: String) : Unit = {
+//    val tmp = if (port.startsWith(":")) {
+//      port.substring(1)
+//    }
+//    else {
+//      port
+//    }
+//    if (tmp.trim.length>0) {
+//      try {
+//        announcer(tmp.toInt,scheme)
+//      }
+//      catch { case e : Exception => log.ifInfo(e) }
+//    }
+//  }
+//
+//  /**
+//    * Registers endpoint with ZK.
+//    * @param port
+//    * @param scheme
+//    */
+//  def announcer(port : Int, scheme: String) : Unit = {
+//    val announcementPoint = s"zk!${configuration.zk.zookeeperConnection()}!${configuration.zk.announcementPoint()}/${scheme}!0"
+//    val ann = Announcer.announce(new InetSocketAddress(GMFNetworkConfigurationResolver.getAnnounceHostname, port), announcementPoint)
+//    announcements ::= ann
+//  }
 
 }

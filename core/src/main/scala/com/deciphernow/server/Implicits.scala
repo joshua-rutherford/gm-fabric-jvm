@@ -34,4 +34,9 @@ object Implicits {
     def parse(s: String) = if (s != null && !s.trim.isEmpty) Some(new File(s)) else None
     override def show(file: Option[File]) = file.toString
   }
+
+  implicit val stringOptionFlaggable: Flaggable[Option[String]] = new Flaggable[Option[String]] {
+    override def default = None
+    def parse(s: String) = if (s!=null) Some(s) else None
+  }
 }

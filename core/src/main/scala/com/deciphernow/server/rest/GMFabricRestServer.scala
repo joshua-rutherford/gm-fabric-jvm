@@ -47,7 +47,7 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
     *
     * @return
     */
-  override def defaultFinatraHttpPort: String = configuration.rest.httpPort()
+  override def defaultFinatraHttpPort: String = GMFNetworkConfigurationResolver.getBindHttpPort//configuration.rest.httpPort()
 
   def getHttpPort : String = defaultFinatraHttpPort
 
@@ -58,7 +58,7 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
     */
   override def defaultHttpsPort: String = {
     (configuration.tls.keyStore(),configuration.tls.trustStore()) match {
-      case (Some(_),Some(_)) => configuration.rest.httpsPort()
+      case (Some(_),Some(_)) => GMFNetworkConfigurationResolver.getBindHttpsPort //configuration.rest.httpsPort()
       case (_,_) => ""
     }
   }
@@ -70,7 +70,7 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
     *
     * @return
     */
-  override def defaultHttpPort: Int = configuration.admin.port().substring(1).toInt
+  override def defaultHttpPort: Int = GMFNetworkConfigurationResolver.getBindAdminPort.substring(1).toInt // configuration.admin.port().substring(1).toInt
 
   def getAdminPort : Int = defaultHttpPort
   /**

@@ -19,7 +19,8 @@ package com.deciphernow.announcement.config
 */
 
 import com.twitter.app.GlobalFlag
-import com.deciphernow.announcement.config.Implicits.stringOptionFlaggable
+//import com.deciphernow.announcement.config.Implicits.stringOptionFlaggable
+import com.deciphernow.server.Implicits.stringOptionFlaggable
 
 // if these not set: fall back to 'service.forward'
 package os.env {
