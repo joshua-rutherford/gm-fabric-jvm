@@ -18,7 +18,7 @@ package com.deciphernow.server.rest
 */
 
 import com.deciphernow.server.tls.TlsServerUtil
-import com.deciphernow.server.{config => configuration}
+import com.deciphernow.server.{GMFNetworkConfigurationResolver, config => configuration}
 import com.deciphernow.server.support.{Decryptor, DecryptorManager}
 import com.twitter.finagle.http.{Request => FinagleRequest, Response => FinagleResponse}
 import com.twitter.finagle.transport.Transport
@@ -47,9 +47,7 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
     *
     * @return
     */
-  override def defaultFinatraHttpPort: String = {
-    configuration.rest.httpPort()
-  }
+  override def defaultFinatraHttpPort: String = configuration.rest.httpPort()
 
   def getHttpPort : String = defaultFinatraHttpPort
 

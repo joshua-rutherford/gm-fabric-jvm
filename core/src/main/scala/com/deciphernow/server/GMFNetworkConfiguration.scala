@@ -3,7 +3,8 @@ package com.deciphernow.server
 
 import java.net.{Inet4Address, InetAddress, NetworkInterface}
 
-import com.deciphernow.server.{config => configuration}
+import com.deciphernow.server.{config => serverConfig}
+import com.deciphernow.announcement.{config => announceConfig}
 import com.twitter.logging.Logger
 
 /*
@@ -34,8 +35,8 @@ object GMFNetworkConfiguration {
   var haveNetworkInterfaceName : Boolean = false
   var announceThis : String = ""
 
-  useIpAddressResolution = configuration.ipAddress.enableIpAddressResolution.get.fold(false)(_ => true)
-  networkInterfaceName = configuration.ipAddress.useNetworkInterfaceName.get.fold("")(definedInterfaceName => definedInterfaceName)
+  useIpAddressResolution = serverConfig.ipAddress.enableIpAddressResolution.get.fold(false)(_ => true)
+  networkInterfaceName = serverConfig.ipAddress.useNetworkInterfaceName.get.fold("")(definedInterfaceName => definedInterfaceName)
   haveNetworkInterfaceName = (networkInterfaceName.trim.length > 0)
 
   def announce = announceThis
@@ -76,7 +77,7 @@ object GMFNetworkConfiguration {
     * Register either the Hostname or IP Address for service endpoints to ZK.
     */
   def identifyHostOrIP : Unit = {
-    if (!configuration.zk.zookeeperConnection().isEmpty && !configuration.zk.announcementPoint().isEmpty) {
+    if (!serverConfig.zk.zookeeperConnection().isEmpty && !serverConfig.zk.announcementPoint().isEmpty) {
       if (haveNetworkInterfaceName) {
         getNetworkInfo(Option(NetworkInterface.getByName(networkInterfaceName)))
       }
@@ -101,3 +102,8 @@ object GMFNetworkConfiguration {
   def convertIpAddress(rawBytes: Array[Byte]) : String = rawBytes.map(n => n & 0xFF).mkString(".")
 
 }
+
+//object GMFNetworkConfigurationResolver {
+//
+//
+//}

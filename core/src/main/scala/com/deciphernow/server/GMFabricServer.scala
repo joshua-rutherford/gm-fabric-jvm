@@ -53,7 +53,12 @@ abstract class GMFabricServer extends App {
 
     log.ifDebug("Main starting up ... ")
 
+    GMFNetworkConfigurationResolver.resolveConfiguration
+
     GMFNetworkConfiguration.identifyHostOrIP
+
+    // todo: this is proof of concept - remove.
+    //GMFNetworkConfigurationResolver.tester
 
     sys.addShutdownHook(close(Time.fromSeconds(2)))
 
@@ -90,9 +95,8 @@ abstract class GMFabricServer extends App {
     * @param port
     * @param scheme
     */
-  def announcer(port : Option[String], scheme: String) : Unit = {
-    announcer(port.get,scheme)
-  }
+  def announcer(port : Option[String], scheme: String) : Unit = announcer(port.get,scheme)
+
 
   /**
     * Registers endpoint with ZK.

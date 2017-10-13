@@ -26,7 +26,7 @@ import com.twitter.inject.app.App
 import com.twitter.finagle.transport.Transport
 import com.twitter.finagle.{ListeningServer, SimpleFilter, Thrift}
 import com.twitter.logging.Logger
-import com.deciphernow.server.{config => configuration}
+import com.deciphernow.server.{GMFNetworkConfigurationResolver, config => configuration}
 import com.deciphernow.server.security.ClientCertificateServiceFactory
 import com.deciphernow.server.support.{Decryptor, DecryptorManager}
 
