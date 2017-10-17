@@ -18,13 +18,13 @@ package com.deciphernow.server.config
 */
 
 import com.twitter.app.GlobalFlag
-
-
+import com.twitter.app.GlobalFlagVisible
 
 /**
   *
   */
 package resources {
+
   object decryptClass extends GlobalFlag[String]("com.deciphernow.server.support.NoDecryptor","Class to decrypt data")
 }
 
@@ -45,6 +45,7 @@ package os.env {
 /**
   * Define the RESTful ports.
   */
+
 package rest {
 
   object httpPort  extends GlobalFlag[String](":8888", "HTTP Port")

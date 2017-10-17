@@ -220,7 +220,7 @@ object GMFNetworkConfigurationResolver {
   /**
     * For ports to be bound, twitter expects the port values to start with ':'. Pre-append the port with ':'
     * if it is missing.
-    * 
+    *
     * @param value
     * @return
     */
