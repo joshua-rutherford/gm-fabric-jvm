@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2017 Decipher Technology Studios LLC
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.deciphernow</groupId>
+        <artifactId>gm-fabric</artifactId>
+        <version>0.1.5-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>gm-fabric-core-integration</artifactId>
+    <packaging>jar</packaging>
+    <name>Microservice framework [Core-Integration]</name>
+
+    <properties>
+        <version.scala.plugin>3.1.0</version.scala.plugin>
+        <version.enforcer.plugin>1.4.1</version.enforcer.plugin>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- see http://davidb.github.com/scala-maven-plugin -->
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${version.scala.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <!--<phase>package</phase>-->
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+                <!--<artifactId>maven-resources-plugin</artifactId>-->
+                <!--<version>2.7</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>set-up</id>-->
+                        <!--<phase>process-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-resources</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${basedir}/target</outputDirectory>-->
+                            <!--<resources>-->
+                                <!--<resource>-->
+                                    <!--<directory>src/main/resources</directory>-->
+                                <!--</resource>-->
+                            <!--</resources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <!--<phase>process-resources</phase>-->
+                        <phase>post-integration-test</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${project.build.directory}" failonerror="true">
+                                   <fileset dir="${project.basedir}/src/main/resources" />
+                                </copy>
+                                <chmod dir="${project.build.directory}" perm="0700"
+                                       includes="**/*.sh" failonerror="true" />
+                                <exec dir="${project.build.directory}" executable="${project.build.directory}/example02.sh" failonerror="true" />-->
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+            </plugin>
+
+
+            <!--<plugin>-->
+                <!--<artifactId>maven-antrun-plugin</artifactId>-->
+                <!--<version>1.7</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>process-resources</phase>-->
+                        <!--<configuration>-->
+                            <!--<tasks>-->
+                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
+                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public home"/>-->
+                                <!--</exec>-->
+
+                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
+                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public rest"/>-->
+                                <!--</exec>-->
+                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
+                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public thrift"/>-->
+                                <!--</exec>-->
+                                <!--<copy todir="${project.basedir}/target/classes/public/images">-->
+                                    <!--<fileset dir="${project.basedir}/src/main/apiblueprint/resources/images" includes="*.png" />-->
+                                <!--</copy>-->
+                            <!--</tasks>-->
+                        <!--</configuration>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+
+
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<version>2.5.2</version>-->
+                <!--<configuration>-->
+                    <!--<descriptor>src/main/assembly/bundle-app.xml</descriptor>-->
+                    <!--<attach>false</attach>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>make-assembly</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>single</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-enforcer-plugin</artifactId>-->
+                <!--<version>${version.enforcer.plugin}</version>-->
+                <!--<configuration>-->
+                    <!--<rules>-->
+                        <!--<bannedPlugins>-->
+                            <!--<level>WARN</level>-->
+                        <!--</bannedPlugins>-->
+                        <!--<requireReleaseDeps>-->
+                            <!--<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>-->
+                            <!--<excludes>-->
+                                <!--<exclude>com.deciphernow:*</exclude>-->
+                            <!--</excludes>-->
+                        <!--</requireReleaseDeps>-->
+                        <!--<dependencyConvergence/>-->
+                    <!--</rules>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<artifactId>maven-dependency-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>unpack</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<artifactItems>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<artifactItem>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<groupId>tanukisoft</groupId>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<artifactId>wrapper-delta-pack</artifactId>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<type>tar.gz</type>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<outputDirectory>${project.build.directory}</outputDirectory>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</artifactItem>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</artifactItems>&ndash;&gt;-->
+                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+            <!--</plugin>-->
+        </plugins>
+
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.deciphernow</groupId>
+            <artifactId>gm-fabric-core</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>finagle-core_${version.scala.major}</artifactId>
+            <version>${version.twitter.finagle}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>finagle-stats_${version.scala.major}</artifactId>
+            <version>${version.twitter.finagle}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>util-core_${version.scala.major}</artifactId>
+            <version>${version.twitter.util}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>finagle-thrift_${version.scala.major}</artifactId>
+            <version>${version.twitter.finagle}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>finagle-serversets_${version.scala.major}</artifactId>
+            <version>${version.twitter.finagle}</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-jdk14</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${version.logback}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${version.logback}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${version.scala.major}</artifactId>
+            <version>${version.scala.test}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${version.logback}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${version.logback}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${version.scala}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-compiler</artifactId>
+            <version>${version.scala}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>twitter-server_${version.scala.major}</artifactId>
+            <version>${version.twitter.server}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>finatra-http_${version.scala.major}</artifactId>
+            <version>${version.finatra}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.twitter</groupId>
+                    <artifactId>twitter-server_${version.scala.major}</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+</project>

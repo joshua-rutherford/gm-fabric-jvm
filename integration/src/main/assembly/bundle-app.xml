@@ -1,0 +1,18 @@
+<!--<assembly>-->
+    <!--<id>support</id>-->
+    <!--<formats>-->
+        <!--<format>tgz</format>-->
+        <!--&lt;!&ndash;<format>dir</format>&ndash;&gt;-->
+    <!--</formats>-->
+    <!--<includeBaseDirectory>false</includeBaseDirectory>-->
+    <!--<fileSets>-->
+        <!--<fileSet>-->
+            <!--<outputDirectory>lib</outputDirectory>-->
+            <!--&lt;!&ndash;<directory>target/libs</directory>&ndash;&gt;-->
+            <!--&lt;!&ndash;<outputDirectory/>&ndash;&gt;-->
+            <!--<includes>-->
+              <!--<include>**/*</include>-->
+            <!--</includes>-->
+        <!--</fileSet>-->
+    <!--</fileSets>-->
+<!--</assembly>-->

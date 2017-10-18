@@ -97,11 +97,11 @@
 
     <dependencies>
 
-        <dependency> <!-- todo: verify that I need ZK explicitly. -->
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.5.0-alpha</version>
-        </dependency>
+        <!--<dependency> &lt;!&ndash; todo: verify that I need ZK explicitly. &ndash;&gt;-->
+            <!--<groupId>org.apache.zookeeper</groupId>-->
+            <!--<artifactId>zookeeper</artifactId>-->
+            <!--<version>3.5.0-alpha</version>-->
+        <!--</dependency>-->
 
 
         <dependency>
