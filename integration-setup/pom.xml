@@ -71,27 +71,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<artifactId>maven-resources-plugin</artifactId>-->
-                <!--<version>2.7</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>set-up</id>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-resources</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>${basedir}/target</outputDirectory>-->
-                            <!--<resources>-->
-                                <!--<resource>-->
-                                    <!--<directory>src/main/resources</directory>-->
-                                <!--</resource>-->
-                            <!--</resources>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
@@ -106,7 +85,7 @@
                                 </copy>
                                 <chmod dir="${project.build.directory}" perm="0700"
                                        includes="**/*.sh" failonerror="true" />
-                                <exec dir="${project.build.directory}" executable="${project.build.directory}/example02.sh" failonerror="true" />-->
+                                <exec dir="${project.build.directory}" executable="${project.build.directory}/test-1.sh" failonerror="true" />-->
                             </tasks>
                         </configuration>
                         <goals>
@@ -114,76 +93,23 @@
                         </goals>
                     </execution>
                 </executions>
-
             </plugin>
-
-
             <!--<plugin>-->
-                <!--<artifactId>maven-antrun-plugin</artifactId>-->
-                <!--<version>1.7</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<configuration>-->
-                            <!--<tasks>-->
-                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
-                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public home"/>-->
-                                <!--</exec>-->
-
-                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
-                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public rest"/>-->
-                                <!--</exec>-->
-                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
-                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public thrift"/>-->
-                                <!--</exec>-->
-                                <!--<copy todir="${project.basedir}/target/classes/public/images">-->
-                                    <!--<fileset dir="${project.basedir}/src/main/apiblueprint/resources/images" includes="*.png" />-->
-                                <!--</copy>-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-
-
-
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<version>2.5.2</version>-->
+                <!--<groupId>org.scalatest</groupId>-->
+                <!--<artifactId>scalatest-maven-plugin</artifactId>-->
+                <!--<version>1.0</version>-->
                 <!--<configuration>-->
-                    <!--<descriptor>src/main/assembly/bundle-app.xml</descriptor>-->
-                    <!--<attach>false</attach>-->
+                    <!--<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>-->
                 <!--</configuration>-->
                 <!--<executions>-->
                     <!--<execution>-->
-                        <!--<id>make-assembly</id>-->
-                        <!--<phase>package</phase>-->
+                        <!--<id>test</id>-->
                         <!--<goals>-->
-                            <!--<goal>single</goal>-->
+                            <!--<goal>test</goal>-->
                         <!--</goals>-->
                     <!--</execution>-->
                 <!--</executions>-->
             <!--</plugin>-->
-            <plugin>
-                <groupId>org.scalatest</groupId>
-                <artifactId>scalatest-maven-plugin</artifactId>
-                <version>1.0</version>
-                <configuration>
-                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>test</id>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!--<plugin>-->
                 <!--<groupId>org.apache.maven.plugins</groupId>-->
                 <!--<artifactId>maven-enforcer-plugin</artifactId>-->
