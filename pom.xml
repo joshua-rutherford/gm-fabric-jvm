@@ -25,7 +25,8 @@
     <modules>
         <module>core</module>
         <module>archetype</module>
-        <module>integration</module>
+        <module>integration-setup</module>
+        <module>integration-verify</module>
     </modules>
 
     <licenses>

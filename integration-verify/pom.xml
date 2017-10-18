@@ -22,9 +22,9 @@
         <version>0.1.5-SNAPSHOT</version>
     </parent>
 
-    <artifactId>gm-fabric-core-integration</artifactId>
+    <artifactId>gm-fabric-core-integration-verify</artifactId>
     <packaging>jar</packaging>
-    <name>Microservice framework [Core-Integration]</name>
+    <name>Microservice framework [Core-Integration-Verify]</name>
 
     <properties>
         <version.scala.plugin>3.1.0</version.scala.plugin>
@@ -92,31 +92,6 @@
                     <!--</execution>-->
                 <!--</executions>-->
             <!--</plugin>-->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <!--<phase>process-resources</phase>-->
-                        <phase>post-integration-test</phase>
-                        <configuration>
-                            <tasks>
-                                <copy todir="${project.build.directory}" failonerror="true">
-                                   <fileset dir="${project.basedir}/src/main/resources" />
-                                </copy>
-                                <chmod dir="${project.build.directory}" perm="0700"
-                                       includes="**/*.sh" failonerror="true" />
-                                <exec dir="${project.build.directory}" executable="${project.build.directory}/example02.sh" failonerror="true" />-->
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-            </plugin>
-
 
             <!--<plugin>-->
                 <!--<artifactId>maven-antrun-plugin</artifactId>-->
@@ -229,11 +204,18 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.deciphernow</groupId>
+            <artifactId>gm-fabric-core-integration-setup</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.deciphernow</groupId>
             <artifactId>gm-fabric-core</artifactId>
             <version>${parent.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>finagle-core_${version.scala.major}</artifactId>
@@ -291,6 +273,13 @@
             <artifactId>logback-classic</artifactId>
             <version>${version.logback}</version>
         </dependency>
+        <dependency>
+            <groupId>com.deciphernow</groupId>
+            <artifactId>gm-fabric-core-integration-setup</artifactId>
+            <version>${parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_${version.scala.major}</artifactId>
