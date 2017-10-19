@@ -9,6 +9,7 @@ do
   FILE=$BASE_SCRIPT_NAME-$COUNT.sh
   if [ -e $FILE ] 
   then
+    echo "Running: $FILE"
     source $FILE
   fi
 done

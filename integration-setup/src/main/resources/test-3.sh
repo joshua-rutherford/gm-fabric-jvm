@@ -7,10 +7,19 @@
 #
 # Description:
 #
-# Set env for announcement of the 'admin' && 'http' port. No values assigned to env, thus will
-# drop back to the bind default.
+# hostname :
 #
-# All bind ports will drop back to default.
+# Announce
+#  - admin  : 9990
+#  - http   : 8888
+#  - https  : 8999
+#  - thrift : 9090
+#
+# Bind 
+#  - admin  : :9990
+#  - http   : :8888
+#  - https  : :8999
+#  - thrift : :9090
 #
 # ################################################################################################ #
 #

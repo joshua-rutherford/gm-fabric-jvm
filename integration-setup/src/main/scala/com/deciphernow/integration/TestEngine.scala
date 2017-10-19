@@ -13,7 +13,7 @@ object TestEngine extends App {
     *
     * @param args
     *             0 -> test report.
-    *             1 -> errors
+    *             1 -> error report.
     */
   override def main(args: Array[String]): Unit = {
 
@@ -24,6 +24,9 @@ object TestEngine extends App {
     System.setErr(new PrintStream(errorFile))
 
     GMFNetworkConfigurationResolver.resolveConfiguration
+
+    //  ::: Id the report file :::
+    println("::: " + args(0) + ":::")
 
     //  ::: Announce hostname :::
     println("Announce HOSTNAME=[" + GMFNetworkConfigurationResolver.getAnnounceHostname + "]")

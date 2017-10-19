@@ -1,5 +1,6 @@
 package com.deciphernow.server
 
+import java.io.{File, PrintStream}
 import java.net.{Inet4Address, InetAddress, NetworkInterface}
 
 import com.deciphernow.server.{config => serverConfig}
@@ -29,9 +30,9 @@ object GMFNetworkConfigurationResolver {
 
   val log = Logger.get(getClass)
 
-  var haveAnnouncementPoints = false;
-  var haveBindPoints = false;
-  var hostname   : String = _
+  //var haveAnnouncementPoints = false;
+  //var haveBindPoints = false;
+  //var hostname   : String = _
 
   var bindAdminPort  : String = _
   var bindHttpPort   : String = _
@@ -45,7 +46,7 @@ object GMFNetworkConfigurationResolver {
   var announceHttpsPort  : String = _
   var announceThriftPort : String = _
 
-  def getHostname = hostname
+  //def getHostname = hostname
 
   def getBindAdminPort = bindAdminPort
   def getBindHttpPort = bindHttpPort
@@ -59,124 +60,267 @@ object GMFNetworkConfigurationResolver {
   def getAnnounceThriftPort = announceThriftPort
 
   /**
-    * Figure out which set of configuration parameters are to be used to announce the service endpoints &&
-    * which configuration parameters are used to bind.
+    *
     */
   def resolveConfiguration = {
-    resolveAnnouncementEnvironmentVars
-    resolveAnnouncementConfiguration
-    resolveBindEnvironmentVars
-    resolveBindConfiguration
+
+    resolveAnnounceHostname
+
+    resolveAnnounceAdminPort
+    resolveAnnounceHttpPort
+    resolveAnnounceHttpsPort
+    resolveAnnounceThriftPort
+
+    resolveBindAdminPort
+    resolveBindHttpPort
+    resolveBindHttpsPort
+    resolveBindThriftPort
+
   }
 
   /**
     *
     */
-  protected [this] def resolveBindConfiguration = {
-
-    // if none are configured then bind && with these values.
-    if (!haveBindPoints) {
-
-      identifyHostOrIP
-
-      bindHttpPort   = addTwitterNuance(serverConfig.rest.httpPort.apply)
-      bindHttpsPort  = addTwitterNuance(serverConfig.rest.httpsPort.apply)
-      bindAdminPort  = addTwitterNuance(serverConfig.admin.port.apply)
-      bindThriftPort = addTwitterNuance(serverConfig.thrift.port.apply)
-
-      if (!haveAnnouncementPoints) {
-        announceHostname   = announceThis
-        announceAdminPort  = filterTwitterNuance(bindAdminPort)
-        announceHttpPort   = filterTwitterNuance(bindHttpPort)
-        announceHttpsPort  = filterTwitterNuance(bindHttpsPort)
-        announceThriftPort = filterTwitterNuance(bindThriftPort)
-      }
-    }
-  }
-
-  /**
-    *
-    */
-  protected [this] def resolveBindEnvironmentVars = {
-
-    // if announcement NOT configured && have ENV here ... then announcement + binding are equal to these values.
-    val hostnameValue = envValue(serverConfig.os.env.hostname.apply)
-
-    // todo: how do we handle if ENV set && useIpAddress is set?
+  protected [this] def resolveAnnounceHostname : Unit = {
     identifyHostOrIP
+    announceHostname = pickValue(
+      List(envValue(announcementConfig.os.env.hostname.apply),
+           configValue(announcementConfig.service.forward.hostname.apply),
+           envValue(serverConfig.os.env.hostname.apply),
+           announceThis)
+    )
 
-    val adminValue    = envValue(serverConfig.os.env.adminPort.apply)
-    val httpValue     = envValue(serverConfig.os.env.httpPort.apply)
-    val httpsValue    = envValue(serverConfig.os.env.httpsPort.apply)
-    val thriftValue   = envValue(serverConfig.os.env.thriftPort.apply)
-
-    haveBindPoints = ((adminValue.trim.length > 0 ) && (httpValue.trim.length > 0))
-
-    if (haveBindPoints) {
-
-      hostname       = hostnameValue
-      bindAdminPort  = addTwitterNuance(adminValue)
-      bindHttpPort   = addTwitterNuance(httpValue)
-      bindHttpsPort  = addTwitterNuance(httpsValue)
-      bindThriftPort = addTwitterNuance(thriftValue)
-
-      if (!haveAnnouncementPoints) {
-
-        announceHostname   = announceThis
-        announceAdminPort  = filterTwitterNuance(adminValue)
-        announceHttpPort   = filterTwitterNuance(httpValue)
-        announceHttpsPort  = filterTwitterNuance(httpsValue)
-        announceThriftPort = filterTwitterNuance(thriftValue)
-      }
-    }
-
+// todo: cleanup
+//    println("Announce.OS.ENV hostname          = [" + envValue(announcementConfig.os.env.hostname.apply) + "]")
+//    println("Announce.SERVICE.FORWARD hostname = [" + configValue(announcementConfig.service.forward.hostname.apply) + "]")
+//    println("Service.OS.ENV  hostname          = [" + envValue(serverConfig.os.env.hostname.apply) + "]")
+//    println("announceThis                      = [" + announceThis + "]")
+//
+//    println("announceHostname                  = [" + announceHostname + "]")
+//    println("hostname                          = [" + hostname + "]")
   }
 
   /**
     *
     */
-  protected [this] def resolveAnnouncementConfiguration = {
-    if (!haveAnnouncementPoints) {
-
-      val hostnameValue = configValue(announcementConfig.service.forward.hostname.apply)
-      val adminValue    = configValue(announcementConfig.service.forward.adminPort.apply)
-      val httpValue     = configValue(announcementConfig.service.forward.httpPort.apply)
-      val httpsValue    = configValue(announcementConfig.service.forward.httpsPort.apply)
-      val thriftValue   = configValue(announcementConfig.service.forward.thriftPort.apply)
-
-      haveAnnouncementPoints = ((adminValue.trim.length > 0) && (httpValue.trim.length > 0))
-
-      if (haveAnnouncementPoints) {
-        announceHostname   = hostnameValue
-        announceAdminPort  = filterTwitterNuance(adminValue)
-        announceHttpPort   = filterTwitterNuance(httpValue)
-        announceHttpsPort  = filterTwitterNuance(httpsValue)
-        announceThriftPort = filterTwitterNuance(thriftValue)
-      }
-    }
+  protected [this] def resolveBindAdminPort : Unit = {
+    bindAdminPort = addTwitterNuance(
+      pickValue(List(
+        envValue(serverConfig.os.env.adminPort.apply),serverConfig.admin.port.apply
+      ))
+    )
   }
 
   /**
     *
     */
-  protected [this] def resolveAnnouncementEnvironmentVars = {
-
-    val hostnameValue = envValue(announcementConfig.os.env.hostname.apply)
-    val adminValue    = envValue(announcementConfig.os.env.adminPort.apply)
-    val httpValue     = envValue(announcementConfig.os.env.httpPort.apply)
-    val httpsValue    = envValue(announcementConfig.os.env.httpsPort.apply)
-    val thriftValue   = envValue(announcementConfig.os.env.thriftPort.apply)
-
-    haveAnnouncementPoints = ((adminValue.trim.length > 0 ) && (httpValue.trim.length > 0))
-
-    if (haveAnnouncementPoints) {
-      announceHostname   = hostnameValue
-      announceAdminPort  = filterTwitterNuance(adminValue)
-      announceHttpPort   = filterTwitterNuance(httpValue)
-      announceHttpsPort  = filterTwitterNuance(httpsValue)
-      announceThriftPort = filterTwitterNuance(thriftValue)
-    }
+  protected [this] def resolveBindHttpPort : Unit = {
+    bindHttpPort = addTwitterNuance(
+      pickValue(List(
+        envValue(serverConfig.os.env.httpPort.apply),serverConfig.rest.httpPort.apply
+      ))
+    )
   }
+
+  /**
+    *
+    */
+  protected [this] def resolveBindHttpsPort : Unit = {
+    bindHttpsPort = addTwitterNuance(
+      pickValue(List(
+        envValue(serverConfig.os.env.httpsPort.apply),serverConfig.rest.httpsPort.apply
+      ))
+    )
+  }
+
+  /**
+    *
+    */
+  protected [this] def resolveBindThriftPort : Unit = {
+    bindThriftPort = addTwitterNuance(
+      pickValue(List(
+        envValue(serverConfig.os.env.thriftPort.apply),serverConfig.thrift.port.apply
+      ))
+    )
+  }
+
+  /**
+    *
+    */
+  protected [this] def resolveAnnounceAdminPort : Unit = {
+    announceAdminPort = filterTwitterNuance(pickValue(List(envValue(announcementConfig.os.env.adminPort.apply),
+      configValue(announcementConfig.service.forward.adminPort.apply),
+      envValue(serverConfig.os.env.adminPort.apply),
+      serverConfig.admin.port.apply)))
+  }
+
+  /**
+    *
+    */
+  protected [this] def resolveAnnounceHttpPort : Unit = {
+    announceHttpPort = filterTwitterNuance(pickValue(List(envValue(announcementConfig.os.env.httpPort.apply),
+      configValue(announcementConfig.service.forward.httpPort.apply),
+      envValue(serverConfig.os.env.httpPort.apply),
+      serverConfig.rest.httpPort.apply)))
+  }
+
+  /**
+    *
+    */
+  protected [this] def resolveAnnounceHttpsPort : Unit = {
+    announceHttpsPort = filterTwitterNuance(pickValue(List(envValue(announcementConfig.os.env.httpsPort.apply),
+      configValue(announcementConfig.service.forward.httpsPort.apply),
+      envValue(serverConfig.os.env.httpsPort.apply),
+      serverConfig.rest.httpsPort.apply)))
+  }
+
+  /**
+    *
+    */
+  protected [this] def resolveAnnounceThriftPort : Unit = {
+    announceThriftPort = filterTwitterNuance(pickValue(List(envValue(announcementConfig.os.env.thriftPort.apply),
+      configValue(announcementConfig.service.forward.thriftPort.apply),
+      envValue(serverConfig.os.env.thriftPort.apply),
+      serverConfig.thrift.port.apply)))
+  }
+
+  /**
+    *
+    * @param values
+    * @return
+    */
+  protected [this] def pickValue(values: List[String]) : String = {
+    var retValue : String = ""
+    values.foreach { v =>
+      if ((retValue.trim.length == 0 ) && (v.trim.length > 0)) {
+        retValue = v
+      }
+    }
+    retValue
+  }
+
+  protected [this] def pickValueX(v1 : String, v2 : String, v3 : String, v4 : String) : String = {
+    ""
+  }
+//  /**
+//    * Figure out which set of configuration parameters are to be used to announce the service endpoints &&
+//    * which configuration parameters are used to bind.
+//    */
+//  def resolveConfiguration = {
+//    resolveAnnouncementEnvironmentVars
+//    resolveAnnouncementConfiguration
+//    resolveBindEnvironmentVars
+//    resolveBindConfiguration
+//  }
+//
+//  /**
+//    *
+//    */
+//  protected [this] def resolveBindConfiguration = {
+//
+//    // if none are configured then bind && with these values.
+//    if (!haveBindPoints) {
+//
+//      identifyHostOrIP
+//
+//      bindHttpPort   = addTwitterNuance(serverConfig.rest.httpPort.apply)
+//      bindHttpsPort  = addTwitterNuance(serverConfig.rest.httpsPort.apply)
+//      bindAdminPort  = addTwitterNuance(serverConfig.admin.port.apply)
+//      bindThriftPort = addTwitterNuance(serverConfig.thrift.port.apply)
+//
+//      if (!haveAnnouncementPoints) {
+//        announceHostname   = announceThis
+//        announceAdminPort  = filterTwitterNuance(bindAdminPort)
+//        announceHttpPort   = filterTwitterNuance(bindHttpPort)
+//        announceHttpsPort  = filterTwitterNuance(bindHttpsPort)
+//        announceThriftPort = filterTwitterNuance(bindThriftPort)
+//      }
+//    }
+//  }
+//
+//  /**
+//    *
+//    */
+//  protected [this] def resolveBindEnvironmentVars = {
+//
+//    // if announcement NOT configured && have ENV here ... then announcement + binding are equal to these values.
+//    val hostnameValue = envValue(serverConfig.os.env.hostname.apply)
+//
+//    // todo: how do we handle if ENV set && useIpAddress is set?
+//    identifyHostOrIP
+//
+//    val adminValue    = envValue(serverConfig.os.env.adminPort.apply)
+//    val httpValue     = envValue(serverConfig.os.env.httpPort.apply)
+//    val httpsValue    = envValue(serverConfig.os.env.httpsPort.apply)
+//    val thriftValue   = envValue(serverConfig.os.env.thriftPort.apply)
+//
+//    haveBindPoints = ((adminValue.trim.length > 0 ) && (httpValue.trim.length > 0))
+//
+//    if (haveBindPoints) {
+//
+//      hostname       = hostnameValue
+//      bindAdminPort  = addTwitterNuance(adminValue)
+//      bindHttpPort   = addTwitterNuance(httpValue)
+//      bindHttpsPort  = addTwitterNuance(httpsValue)
+//      bindThriftPort = addTwitterNuance(thriftValue)
+//
+//      if (!haveAnnouncementPoints) {
+//
+//        announceHostname   = announceThis
+//        announceAdminPort  = filterTwitterNuance(adminValue)
+//        announceHttpPort   = filterTwitterNuance(httpValue)
+//        announceHttpsPort  = filterTwitterNuance(httpsValue)
+//        announceThriftPort = filterTwitterNuance(thriftValue)
+//      }
+//    }
+//
+//  }
+//
+//  /**
+//    *
+//    */
+//  protected [this] def resolveAnnouncementConfiguration = {
+//    if (!haveAnnouncementPoints) {
+//
+//      val hostnameValue = configValue(announcementConfig.service.forward.hostname.apply)
+//      val adminValue    = configValue(announcementConfig.service.forward.adminPort.apply)
+//      val httpValue     = configValue(announcementConfig.service.forward.httpPort.apply)
+//      val httpsValue    = configValue(announcementConfig.service.forward.httpsPort.apply)
+//      val thriftValue   = configValue(announcementConfig.service.forward.thriftPort.apply)
+//
+//      haveAnnouncementPoints = ((adminValue.trim.length > 0) && (httpValue.trim.length > 0))
+//
+//      if (haveAnnouncementPoints) {
+//        announceHostname   = hostnameValue
+//        announceAdminPort  = filterTwitterNuance(adminValue)
+//        announceHttpPort   = filterTwitterNuance(httpValue)
+//        announceHttpsPort  = filterTwitterNuance(httpsValue)
+//        announceThriftPort = filterTwitterNuance(thriftValue)
+//      }
+//    }
+//  }
+//
+//  /**
+//    *
+//    */
+//  protected [this] def resolveAnnouncementEnvironmentVars = {
+//
+//    val hostnameValue = envValue(announcementConfig.os.env.hostname.apply)
+//    val adminValue    = envValue(announcementConfig.os.env.adminPort.apply)
+//    val httpValue     = envValue(announcementConfig.os.env.httpPort.apply)
+//    val httpsValue    = envValue(announcementConfig.os.env.httpsPort.apply)
+//    val thriftValue   = envValue(announcementConfig.os.env.thriftPort.apply)
+//
+//    haveAnnouncementPoints = ((adminValue.trim.length > 0 ) && (httpValue.trim.length > 0))
+//
+//    if (haveAnnouncementPoints) {
+//      announceHostname   = hostnameValue
+//      announceAdminPort  = filterTwitterNuance(adminValue)
+//      announceHttpPort   = filterTwitterNuance(httpValue)
+//      announceHttpsPort  = filterTwitterNuance(httpsValue)
+//      announceThriftPort = filterTwitterNuance(thriftValue)
+//    }
+//  }
 
   /**
     * Retrieve the value from the environment variable. Return empty String if None.
@@ -218,8 +362,7 @@ object GMFNetworkConfigurationResolver {
   }
 
   /**
-    * For ports to be bound, twitter expects the port values to start with ':'. Pre-append the port with ':'
-    * if it is missing.
+    * For ports to be bound, twitter expects the port values to start with ':'. Pre-append the port with ':' if it is missing.
     *
     * @param value
     * @return
@@ -272,7 +415,7 @@ object GMFNetworkConfigurationResolver {
 
         if (anAddress.isInstanceOf[Inet4Address] && !anAddress.isLoopbackAddress) {
           announceThis = if (useIpAddressResolution) { convertIpAddress(anAddress.getAddress) }
-          else { InetAddress.getLocalHost.getHostName}
+          else { InetAddress.getLocalHost.getHostName }
         }
       }
     }

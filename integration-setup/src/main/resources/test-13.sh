@@ -10,16 +10,16 @@
 # hostname : Pickles
 #
 # Announce
-#  - admin  : 44444
-#  - http   : 44445
-#  - https  : 8999
-#  - thrift : 9090
+#  - admin  : 5555
+#  - http   : 5556
+#  - https  : 5557
+#  - thrift : 5558
 #
 # Bind 
-#  - admin  : :44446
-#  - http   : :44447
-#  - https  : :8999
-#  - thrift : :9090
+#  - admin  : :10002
+#  - http   : :10000
+#  - https  : :10001
+#  - thrift : :10002
 #
 # ################################################################################################ #
 #
@@ -31,7 +31,7 @@
 # ################################################################################################ #
 #
 source configure.sh
-export NUMBER=7
+export NUMBER=13
 export ANSWER_REPORT="${DEFAULT_DIR}"/report-"${NUMBER}".txt
 export ERROR_REPORT="${DEFAULT_DIR}"/error-report-"${NUMBER}".txt
 rm -rf "${ANSWER_REPORT}" "${ERROR_REPORT}" 
@@ -42,17 +42,16 @@ rm -rf "${ANSWER_REPORT}" "${ERROR_REPORT}"
 #
 # ################################################################################################ #
 #
-export ANNOUNCE_ADMIN_PORT=:44444
-export ANNOUNCE_HTTP_PORT=:44445
-export ANNOUNCE_HOSTNAME=Pickles
-export BIND_ADMIN_PORT=:44446
-export BIND_HTTP_PORT=:44447
 scala -classpath ${INTEGRATION_CLASSPATH}:${INTEGRATION_JAR}:. \
-    -Dcom.deciphernow.server.config.os.env.adminPort=BIND_ADMIN_PORT \
-    -Dcom.deciphernow.server.config.os.env.httpPort=BIND_HTTP_PORT \
-    -Dcom.deciphernow.announcement.config.os.env.hostname=ANNOUNCE_HOSTNAME  \
-    -Dcom.deciphernow.announcement.config.os.env.adminPort=ANNOUNCE_ADMIN_PORT \
-    -Dcom.deciphernow.announcement.config.os.env.httpPort=ANNOUNCE_HTTP_PORT \
+    -Dcom.deciphernow.announcement.config.service.forward.hostname=Pickles \
+    -Dcom.deciphernow.announcement.config.service.forward.adminPort=:5555 \
+    -Dcom.deciphernow.announcement.config.service.forward.httpPort=:5556 \
+    -Dcom.deciphernow.announcement.config.service.forward.httpsPort=:5557 \
+    -Dcom.deciphernow.announcement.config.service.forward.thriftPort=:5558 \
+    -Dcom.deciphernow.server.config.rest.httpPort=10000 \
+    -Dcom.deciphernow.server.config.rest.httpsPort=10001  \
+    -Dcom.deciphernow.server.config.admin.port=10002 \
+    -Dcom.deciphernow.server.config.thrift.port=10003  \
     com.deciphernow.integration.TestEngine \
     ${ANSWER_REPORT} \
     ${ERROR_REPORT} \
