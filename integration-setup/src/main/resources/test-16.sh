@@ -7,18 +7,18 @@
 #
 # Description:
 #
-# hostname :
+# hostname : Pickles
 #
 # Announce
-#  - admin  : 9990
-#  - http   : 8888
-#  - https  : 8999
+#  - admin  : 25000
+#  - http   : 5556
+#  - https  : 10001
 #  - thrift : 9090
 #
 # Bind 
-#  - admin  : :9990
-#  - http   : :8888
-#  - https  : :8999
+#  - admin  : :10002
+#  - http   : :10000
+#  - https  : :10001
 #  - thrift : :9090
 #
 # ################################################################################################ #
