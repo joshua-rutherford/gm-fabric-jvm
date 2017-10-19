@@ -81,11 +81,16 @@
                         <configuration>
                             <tasks>
                                 <copy todir="${project.build.directory}" failonerror="true">
+                                    <fileset dir="${project.build.directory}/" />
+                                </copy>
+                                <copy todir="${project.build.directory}" failonerror="true">
                                    <fileset dir="${project.basedir}/src/main/resources" />
                                 </copy>
                                 <chmod dir="${project.build.directory}" perm="0700"
                                        includes="**/*.sh" failonerror="true" />
-                                <exec dir="${project.build.directory}" executable="${project.build.directory}/test-1.sh" failonerror="true" />-->
+                                <exec dir="${project.build.directory}" executable="${project.build.directory}/engine.sh" failonerror="true" />-->
+
+                                <!--<exec dir="${project.build.directory}" executable="${project.build.directory}/test-1.sh" failonerror="true" />&ndash;&gt;-->
                             </tasks>
                         </configuration>
                         <goals>

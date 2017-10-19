@@ -6,29 +6,30 @@ import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 class ValidateSpec extends FlatSpec with Matchers with BeforeAndAfterEach {
 
-    override def beforeEach(): Unit = {
-      val f = new File("/tmp/integration-finished.txt")
-
-      var count = 0
-      var haveFile = false
-      while (!haveFile) {
-        println("WOMBAT .... integration-finished .... not [" + count + "]")
-        try {
-          Thread.sleep(1000)
-        }
-        catch {
-          case e : Exception => {
-            e.printStackTrace()
-          }
-        }
-        count = count + 1
-        haveFile = if (f.exists() || count > 120 ) true else false
+  // What if the last test finishes before a prior test?
+  override def beforeEach(): Unit = {
+    val f = new File("/tmp/integration-finished.txt")
+    val MAX_COUNT = 10//120
+    var count = 0
+    var haveFile = false
+    while (!haveFile) {
+      try {
+        println("Waiting for the tests to finish. Going to sleep [" + count + "] of [" + MAX_COUNT + "]")
+        Thread.sleep(1000)
       }
-      if (count > 120) fail()
+      catch {
+        case e : Exception => {
+          e.printStackTrace()
+        }
+      }
+      count = count + 1
+      haveFile = if (f.exists() || count >= MAX_COUNT ) true else false
     }
-//  override def beforeEach(): Unit = {
-//
-//  }
+    if (count >= MAX_COUNT) {
+      println("It appears that some of the tests never finished. Failing the suite.")
+      fail()
+    }
+  }
 
   "this " should " be able to get to the data " in {
     val f = new File("/tmp/report-1.txt")

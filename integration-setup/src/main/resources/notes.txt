@@ -1,0 +1,90 @@
+#!/bin/bash -
+
+
+(
+
+echo `pwd`
+#cd target
+source dependencies.sh
+
+#
+# The required jar does not get built before this script is executed thus go to sleep.
+#sleep 20
+#scala -classpath ${INTEGRATION_CLASSPATH}:gm-fabric-core-integration-0.1.5-SNAPSHOT.jar:. com.deciphernow.integration.IT001
+#scala -classpath ${INTEGRATION_CLASSPATH}:gm-fabric-core-integration-0.1.5-SNAPSHOT.jar:. com.deciphernow.integration.IntegrationTests
+export ANNOUNCE_ADMIN_PORT=:45000
+export ANNOUNCE_HTTP_PORT=:45001
+scala -classpath ${INTEGRATION_CLASSPATH}:gm-fabric-core-integration-setup-0.1.5-SNAPSHOT.jar:. -Dcom.deciphernow.announcement.config.os.env.adminPort=ANNOUNCE_ADMIN_PORT -Dcom.deciphernow.announcement.config.os.env.httpPort=ANNOUNCE_HTTP_PORT com.deciphernow.integration.IT001 /tmp/001.txt
+
+
+)
+
+(
+
+source dependencies.sh
+scala -classpath ${INTEGRATION_CLASSPATH}:gm-fabric-core-integration-setup-0.1.5-SNAPSHOT.jar:. \
+    -Dcom.deciphernow.announcement.config.os.env.adminPort=ANNOUNCE_ADMIN_PORT \
+    -Dcom.deciphernow.announcement.config.os.env.httpPort=ANNOUNCE_HTTP_PORT \
+    com.deciphernow.integration.TestEngine \
+    /tmp/report-1.txt \
+    /tmp/error-1.txt
+
+)
+
+(
+
+export DIR=/tmp
+export ANSWER_REPORT="${DIR}"/report-1.txt
+export ERROR_REPORT="${DIR}"/error-report-1.txt
+source dependencies.sh
+scala -classpath ${INTEGRATION_CLASSPATH}:gm-fabric-core-integration-setup-0.1.5-SNAPSHOT.jar:. \
+    -Dcom.deciphernow.announcement.config.os.env.adminPort=ANNOUNCE_ADMIN_PORT \
+    -Dcom.deciphernow.announcement.config.os.env.httpPort=ANNOUNCE_HTTP_PORT \
+    com.deciphernow.integration.TestEngine \
+    ${ANSWER_REPORT} \
+    ${ERROR_REPORT} \
+    done
+
+)
+
+(
+All variable attributes to be tested.
+
+  // ENV vars for ANNOUNCE ports:
+  com.deciphernow.announcement.config.os.env.hostname
+  com.deciphernow.announcement.config.os.env.adminPort
+  com.deciphernow.announcement.config.os.env.httpPort
+  com.deciphernow.announcement.config.os.env.httpsPort
+  com.deciphernow.announcement.config.os.env.thriftPort
+
+  // configuration for announcement points
+  com.deciphernow.announcement.config.service.forward.hostname
+  com.deciphernow.announcement.config.service.forward.adminPort
+  com.deciphernow.announcement.config.service.forward.httpPort
+  com.deciphernow.announcement.config.service.forward.httpsPort
+  com.deciphernow.announcement.config.service.forward.thriftPort
+
+  // ENV vars for BOUND ports:
+  com.deciphernow.server.config.os.env.hostname
+  com.deciphernow.server.config.os.env.adminPort
+  com.deciphernow.server.config.os.env.httpPort
+  com.deciphernow.server.config.os.env.httpsPort
+  com.deciphernow.server.config.os.env.thriftPort
+
+  // BOUND ports ( also have defaults ):
+  com.deciphernow.server.config.rest.httpPort
+  com.deciphernow.server.config.rest.httpsPort
+  com.deciphernow.server.config.admin.port
+  com.deciphernow.server.config.thrift.port
+
+  com.deciphernow.server.config.ipAddress.enableIpAddressResolution
+  com.deciphernow.server.config.ipAddress.useNetworkInterfaceName
+)
+
+# ################################################################################################ #
+#
+# Description:
+#
+# ################################################################################################ #
+
+- will need a way to fix the main artifact based on the version ... otherwise everything will fail.

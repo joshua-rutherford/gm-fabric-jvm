@@ -5,7 +5,7 @@
 
 echo `pwd`
 #cd target
-source dependencies.sh
+source configure.sh
 
 #
 # The required jar does not get built before this script is executed thus go to sleep.

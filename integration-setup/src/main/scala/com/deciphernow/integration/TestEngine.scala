@@ -14,33 +14,36 @@ object TestEngine extends App {
     * @param args
     *             0 -> test report.
     *             1 -> errors
-    *             2 -> Put string: 'done' for the engine to write the termination file.
     */
   override def main(args: Array[String]): Unit = {
 
     val answerFile = new File(args(0))
     val errorFile = new File(args(1))
 
-    if (args.length == 3 && args(2).equals("done")) {
-      val finished = new File("/tmp/integration-finished.txt")
-      finished.createNewFile()
-    }
+//    if (args.length == 4 && args(3).equals("done")) {
+//      val finished = new File(args(2) + "/integration-finished.txt")
+//      finished.createNewFile()
+//    }
 
     System.setOut(new PrintStream(answerFile))
     System.setErr(new PrintStream(errorFile))
 
+    GMFNetworkConfigurationResolver.resolveConfiguration
+
+    //  ::: Announce hostname :::
+    print("Announce HOSTNAME=[" + GMFNetworkConfigurationResolver.getAnnounceHostname + "]")
+
     //  ::: Announce ports :::
-    println("Announce HOSTNAME    = " + GMFNetworkConfigurationResolver.getAnnounceHostname)
-    println("Announce adminPort   = " + GMFNetworkConfigurationResolver.getAnnounceAdminPort)
-    println("Announce httpPort    = " + GMFNetworkConfigurationResolver.getAnnounceHttpPort)
-    println("Announce httpsPort   = " + GMFNetworkConfigurationResolver.getAnnounceHttpsPort)
-    println("Announce thriftPort  = " + GMFNetworkConfigurationResolver.getAnnounceThriftPort)
+    print("Announce adminPort=[" + GMFNetworkConfigurationResolver.getAnnounceAdminPort + "]")
+    print("Announce httpPort=[" + GMFNetworkConfigurationResolver.getAnnounceHttpPort + "]")
+    print("Announce httpsPort=[" + GMFNetworkConfigurationResolver.getAnnounceHttpsPort + "]")
+    print("Announce thriftPort=[" + GMFNetworkConfigurationResolver.getAnnounceThriftPort + "]")
 
     //  ::: Bind ports :::
-    println("Bind adminPort       = " + GMFNetworkConfigurationResolver.getBindAdminPort)
-    println("Bind httpPort        = " + GMFNetworkConfigurationResolver.getBindHttpPort)
-    println("Bind httpsPort       = " + GMFNetworkConfigurationResolver.getBindHttpsPort)
-    println("Bind thriftPort      = " + GMFNetworkConfigurationResolver.getBindThriftPort)
+    print("Bind adminPort=[" + GMFNetworkConfigurationResolver.getBindAdminPort + "]")
+    print("Bind httpPort=[" + GMFNetworkConfigurationResolver.getBindHttpPort + "]")
+    print("Bind httpsPort=[" + GMFNetworkConfigurationResolver.getBindHttpsPort + "]")
+    print("Bind thriftPort=" + GMFNetworkConfigurationResolver.getBindThriftPort + "]")
 
     System.err.flush()
     System.err.close()
