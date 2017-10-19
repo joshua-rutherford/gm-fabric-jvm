@@ -3,7 +3,8 @@
 # ################################################################################################ #
 # Clean up.
 # ################################################################################################ #
-unset DEFAULT_DIR TERMINATION_FILE INTEGRATION_JAR INTEGRATION_CLASSPATH
+#unset DEFAULT_DIR TERMINATION_FILE INTEGRATION_JAR INTEGRATION_CLASSPATH
+unset DEFAULT_DIR INTEGRATION_JAR INTEGRATION_CLASSPATH
 TEMP_FILE=/tmp/temp-libs-gmf.txt
 rm -rf ${TEMP_FILE}
 
@@ -21,7 +22,6 @@ done
 # Export the variables.
 # ################################################################################################ #
 export DEFAULT_DIR=/tmp
-export TERMINATION_FILE="${DEFAULT_DIR}/integration-finished.txt"
 export INTEGRATION_JAR=`ls gm-fabric-*.jar | grep -iv javadoc`
 export INTEGRATION_CLASSPATH=`cat ${TEMP_FILE} | tr -d '\n' | tr -d ' '`
 

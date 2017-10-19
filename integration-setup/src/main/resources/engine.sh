@@ -13,4 +13,4 @@ do
   fi
 done
 
-touch $TERMINATION_FILE
+#touch $TERMINATION_FILE
