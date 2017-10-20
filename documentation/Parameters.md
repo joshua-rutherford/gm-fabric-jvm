@@ -34,45 +34,8 @@ are encrypted through your implementation then enable as shown.
     -com.deciphernow.server.config.resources.decryptClass=com.blah.my.own.Decryptor
     
 
-### Change the admin port
-The default port for the admin is `:9990`. 
-
-Set the following attribute if you want to change the port.
-
-    -com.deciphernow.server.config.admin.port=:10000
-    
-This port cannot be turned off.    
-    
-### Change the HTTP port
-The default port is `:8888`.
-    
-Set the following attribute if you want to change the port.
-    
-    -com.deciphernow.server.config.rest.httpPort=:20000
-    
-To turn off this port, assign nothing to this port.
-    
-    -com.deciphernow.server.config.rest.httpPort=
-    
-### Change the HTTPS port
-This service will only be instantiated when a keystore + truststore attributes above are defined. The service port will default to `:8999`.
-    
-Set the following attribute if you want to change the port.
-    
-    -com.deciphernow.server.config.rest.httpsPort=:20001
-
-To turn off the HTTPS service comment out the keystore & truststore in the configurations.
-
-### Change the Thrift port
-This service will default to `:9090`. This service is automatically configured as two-way SSL if a keystore & truststore are provided. The thrift service is prefixed with `::non-ssl` if not configured for SSL and prefixed with `::ssl` when a keystore & truststore is provided.
-
-Set the following attribute if you want to change the port.
-
-    -com.deciphernow.server.config.thrift.port=:30000
-
-To fully turn off this service, assign nothing to the port.
-
-    -com.deciphernow.server.config.thrift.port=
+### Bind and Announce
+To configure different ports to __BIND__ to or __ANNOUNCE__ different ports [see](AnnounceAndBind.md).
     
 ## Set the Thrift method level statistics unit of measure
 

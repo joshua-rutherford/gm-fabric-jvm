@@ -1,5 +1,5 @@
 # Overview
-This document describes how to configure the microservice to announce and or bind to different ports.
+This document describes how to configure the microservice to announce and or bind to different ports, change the hostname etc.
 
 # Announcing and Binding
 The attributes for the microservice have been enhanced to allow for separate configuration for announcing and binding ports. As well, one can also define environment variables that will override a configuration.
@@ -7,77 +7,94 @@ The attributes for the microservice have been enhanced to allow for separate con
 ## Bind attributes
 
 ### Bind through configuration.
-The following attributes are the default announce and bind attributes of a microservice.  If no __Announce attributes__ defined, then these attribute are used in announcement and binding. If these attributes are __NOT__ defined, the microservice will announce and bind to the __default__ values. One should always prefix the port with a colon.
+The following attributes are the default announce and bind attributes of a microservice.
 
-Configure the admin port. The default value is __:9990__
+Configure the admin port. The default value is __:9990__.
 
     -com.deciphernow.server.config.admin.port=:10000
     
-Configure the http port. The default value is __:8888__
+Configure the http port. The default value is __:8888__.
 
     -com.deciphernow.server.config.rest.httpPort=:20000
     
-Configure the https port. The default value is __:8999__
+Configure the https port. The default value is __:8999__.
 
     -com.deciphernow.server.config.rest.httpsPort=:20001
     
-Configure the thrift port. The default value is __:9090__
+Configure the thrift port. The default value is __:9090__.
 
     -com.deciphernow.server.config.thrift.port=:30000
     
 ### Bind through environment variables.
-The following attributes allow for a defined environment variable to be the assigned as the __bind__  and __announce__ port. If no __Announce attributes__ defined, then these attribute are used in announcement and binding. At minimum the __adminPort__ and __httpPort__ must be defined for the bind environment variables to be used. The reason is there will always be an __admin__ and __http__ port but not necessarily a __thrift__ or __https__ port.
+The following attributes allow for a defined environment variable to be the assigned as the __bind__  and __announce__ port.
   
-Point to the environment variable defining the hostname. The default value is __None__
+Point to the environment variable defining the hostname. The default value is __None__. This overrides __-com.deciphernow.server.config.ipAddress.enableIpAddressResolution__ only if ENV is defined with a value.
 
     -com.deciphernow.server.config.os.env.hostname
     
-Point to the environment variable defining the admin port. The default value is __None__
+Point to the environment variable defining the admin port. The default value is __None__. This overrides __-com.deciphernow.server.config.admin.port__ only if ENV is defined with a value.
 
     -com.deciphernow.server.config.os.env.adminPort
      
-Point to the environment variable defining the http port. The default value is __None__
+Point to the environment variable defining the http port. The default value is __None__. This overrides __-com.deciphernow.server.config.rest.httpPort__ only if ENV is defined with a value.
 
     -com.deciphernow.server.config.os.env.httpPort
     
-Point to the environment variable defining the https port. The default value is __None__
+Point to the environment variable defining the https port. The default value is __None__. This overrides __-com.deciphernow.server.config.rest.httpsPort__ only if ENV is defined with a value.
 
     -com.deciphernow.server.config.os.env.httpsPort
     
-Point to the environment variable defining the thrift port. The default value is __None__
+Point to the environment variable defining the thrift port. The default value is __None__. This overrides __-com.deciphernow.server.config.thrift.port__ only if ENV is defined with a value.
 
     -com.deciphernow.server.config.os.env.thriftPort 
 
 
 ## Announce attributes
-If the following 
-
-### Announce with environment variables
-The following attributes point to environment variables that contain the information. If the environment variable is __NOT__ defined or has an empty value the 
-
-None
--com.deciphernow.announcement.config.os.env.hostname
--com.deciphernow.announcement.config.os.env.adminPort
--com.deciphernow.announcement.config.os.env.httpPort
--com.deciphernow.announcement.config.os.env.httpsPort
--com.deciphernow.announcement.config.os.env.thriftPort
+If any of the announcement attributes are defined then they override any __BIND__ attributes with respect to announcement.
 
 ### Announce through configuration
-The following attributes define the announcement point of the microservice. They override __Section 2 and Section 1__ with respect to announcement. At minimum __adminPort__ and __httpPort__ must be defined for these to take effect.
+The following attributes define the announcement point of the microservice. If set, they will override all __BIND__ attributes with respect to announcement.
 
-None
--com.deciphernow.announcement.config.service.forward.hostname
--com.deciphernow.announcement.config.service.forward.adminPort
--com.deciphernow.announcement.config.service.forward.httpPort
--com.deciphernow.announcement.config.service.forward.httpsPort
--com.deciphernow.announcement.config.service.forward.thriftPort
 
-## Order of precedence
+Point to the environment variable defining the hostname. The default value is __None__. This overrides __-com.deciphernow.server.config.ipAddress.enableIpAddressResolution__.
 
-# Example configurations
+    -com.deciphernow.announcement.config.service.forward.hostname
 
-## Example 1
+Point to the environment variable defining the admin port. The default value is __None__. 
+    
+    -com.deciphernow.announcement.config.service.forward.adminPort
 
-## Example 2
+Point to the environment variable defining the http port. The default value is __None__. 
+    
+    -com.deciphernow.announcement.config.service.forward.httpPort
 
-## Example 3
+Point to the environment variable defining the https port. The default value is __None__. 
+    
+    -com.deciphernow.announcement.config.service.forward.httpsPort
+
+Point to the environment variable defining the thrift port. The default value is __None__.
+    
+    -com.deciphernow.announcement.config.service.forward.thriftPort
+
+### Announce with environment variables
+The following attributes point to environment variables that contain the information. If set, they will override __all__ attributes with respect to announcement.
+    
+Point to the environment variable defining the hostname. The default value is __None__. This overrides __-com.deciphernow.server.config.ipAddress.enableIpAddressResolution__ only if ENV is defined with a value.
+
+    -com.deciphernow.announcement.config.os.env.hostname
+    
+Point to the environment variable defining the admin port. The default value is __None__. This overrides __-com.deciphernow.announcement.config.service.forward.adminPort__ only if ENV is defined with a value.
+
+    -com.deciphernow.announcement.config.os.env.adminPort
+     
+Point to the environment variable defining the http port. The default value is __None__. This overrides __-com.deciphernow.announcement.config.service.forward.httpPort__ only if ENV is defined with a value.
+
+    -com.deciphernow.announcement.config.os.env.httpPort
+    
+Point to the environment variable defining the https port. The default value is __None__. This overrides __-com.deciphernow.announcement.config.service.forward.httpsPort__ only if ENV is defined with a value.
+
+    -com.deciphernow.announcement.config.os.env.httpsPort
+    
+Point to the environment variable defining the thrift port. The default value is __None__. This overrides __-com.deciphernow.announcement.config.service.forward.thriftPort__ only if ENV is defined with a value.
+
+    -com.deciphernow.announcement.config.os.env.thriftPort     

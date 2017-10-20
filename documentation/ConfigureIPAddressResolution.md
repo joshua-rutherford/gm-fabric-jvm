@@ -8,7 +8,7 @@ To use the IP address over the hostname of the server add the following property
     -com.deciphernow.server.config.ipAddress.enableIpAddressResolution=true
     
 ## Network interface
-By assigning the name of the network interface, the ip address will be used. If no network interface name assigned it will attempt to auto discover the correct network interface to leverage the IP address from.
+By assigning the name of the network interface the ip address will be used. If no network interface name assigned it will attempt to auto discover the correct network interface to leverage the IP address from. This configuration may be superseded by [other configuration attributes](AnnounceAndBind.md)
 
 ### Auto discover
 Leave unassigned. It will attempt to pick the correct interface that is not the loopback interface.
@@ -19,5 +19,6 @@ Leave unassigned. It will attempt to pick the correct interface that is not the 
 Assign the name of ethernet to use.
     
     -com.deciphernow.server.config.ipAddress.useNetworkInterfaceName=eth0
+    
     
 
