@@ -61,7 +61,6 @@
                 <executions>
                     <execution>
                         <phase>process-resources</phase>
-                        <!--<phase>package</phase>-->
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
@@ -76,7 +75,6 @@
                 <version>1.7</version>
                 <executions>
                     <execution>
-                        <!--<phase>process-resources</phase>-->
                         <phase>post-integration-test</phase>
                         <configuration>
                             <tasks>
@@ -99,62 +97,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.scalatest</groupId>-->
-                <!--<artifactId>scalatest-maven-plugin</artifactId>-->
-                <!--<version>1.0</version>-->
-                <!--<configuration>-->
-                    <!--<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>test</id>-->
-                        <!--<goals>-->
-                            <!--<goal>test</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-enforcer-plugin</artifactId>-->
-                <!--<version>${version.enforcer.plugin}</version>-->
-                <!--<configuration>-->
-                    <!--<rules>-->
-                        <!--<bannedPlugins>-->
-                            <!--<level>WARN</level>-->
-                        <!--</bannedPlugins>-->
-                        <!--<requireReleaseDeps>-->
-                            <!--<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>-->
-                            <!--<excludes>-->
-                                <!--<exclude>com.deciphernow:*</exclude>-->
-                            <!--</excludes>-->
-                        <!--</requireReleaseDeps>-->
-                        <!--<dependencyConvergence/>-->
-                    <!--</rules>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-dependency-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>unpack</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<artifactItems>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<artifactItem>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<groupId>tanukisoft</groupId>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<artifactId>wrapper-delta-pack</artifactId>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<type>tar.gz</type>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<outputDirectory>${project.build.directory}</outputDirectory>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</artifactItem>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</artifactItems>&ndash;&gt;-->
-                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-            <!--</plugin>-->
         </plugins>
 
     </build>

@@ -1,12 +1,5 @@
 package com.deciphernow.server
 
-import java.net.InetSocketAddress
-
-import com.twitter.finagle.{Announcement, Announcer}
-import com.twitter.util.Future
-import com.deciphernow.server.{config => configuration}
-import com.twitter.logging.Logger
-
 /*
     Copyright 2017 Decipher Technology Studios LLC
 
@@ -23,6 +16,13 @@ import com.twitter.logging.Logger
     limitations under the License.
 */
 
+import java.net.InetSocketAddress
+
+import com.twitter.finagle.{Announcement, Announcer}
+import com.twitter.util.Future
+import com.deciphernow.server.{config => configuration}
+import com.twitter.logging.Logger
+
 /**
   *
   */
@@ -31,8 +31,6 @@ object GMFAnnouncer {
   val log = Logger.get(getClass)
 
   private[this] var announcements = List.empty[Future[Announcement]]
-
-  // todo: move our 'announcer' code out into it's own 'object'
 
   /**
     * Registers endpoint with ZK.

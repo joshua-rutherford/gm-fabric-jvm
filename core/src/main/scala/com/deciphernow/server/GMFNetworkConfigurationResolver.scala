@@ -1,11 +1,5 @@
 package com.deciphernow.server
 
-import java.net.{Inet4Address, InetAddress, NetworkInterface}
-
-import com.deciphernow.server.{config => serverConfig}
-import com.deciphernow.announcement.{config => announcementConfig}
-import com.twitter.logging.Logger
-
 /*
     Copyright 2017 Decipher Technology Studios LLC
 
@@ -21,6 +15,12 @@ import com.twitter.logging.Logger
     See the License for the specific language governing permissions and
     limitations under the License.
 */
+
+import java.net.{Inet4Address, InetAddress, NetworkInterface}
+
+import com.deciphernow.server.{config => serverConfig}
+import com.deciphernow.announcement.{config => announcementConfig}
+import com.twitter.logging.Logger
 
 /**
   *
@@ -72,7 +72,7 @@ object GMFNetworkConfigurationResolver {
   }
 
   /**
-    * FIXME: still not resolving hostname accuratly.
+    *
     */
   protected [this] def resolveAnnounceHostname : Unit = {
     identifyHostOrIP
@@ -246,7 +246,7 @@ object GMFNetworkConfigurationResolver {
   var haveNetworkInterfaceName : Boolean = false
   var announceThis : String = ""
 
-  useIpAddressResolution = serverConfig.ipAddress.enableIpAddressResolution.get.fold(false)(_ => true)
+  useIpAddressResolution = serverConfig.ipAddress.enableIpAddressResolution.apply
   networkInterfaceName = serverConfig.ipAddress.useNetworkInterfaceName.get.fold("")(definedInterfaceName => definedInterfaceName)
   haveNetworkInterfaceName = (networkInterfaceName.trim.length > 0)
 
@@ -283,10 +283,9 @@ object GMFNetworkConfigurationResolver {
   }
 
   /**
-    * Register either the Hostname or IP Address for service endpoints to ZK.
+    * Retrieve the 'hostname' or the 'IPv4' address.
     */
   def identifyHostOrIP : Unit = {
-//    if (!serverConfig.zk.zookeeperConnection().isEmpty && !serverConfig.zk.announcementPoint().isEmpty) {
       if (haveNetworkInterfaceName) {
         getNetworkInfo(Option(NetworkInterface.getByName(networkInterfaceName)))
       }
@@ -296,10 +295,6 @@ object GMFNetworkConfigurationResolver {
           findNetworkInfo(networkInterfaces.nextElement)
         }
       }
-//    }
-//    else {
-//      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
-//    }
   }
 
   /**

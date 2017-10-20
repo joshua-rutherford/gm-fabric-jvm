@@ -61,7 +61,6 @@
                 <executions>
                     <execution>
                         <phase>process-resources</phase>
-                        <!--<phase>package</phase>-->
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
@@ -71,78 +70,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<artifactId>maven-resources-plugin</artifactId>-->
-                <!--<version>2.7</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>set-up</id>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>copy-resources</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<outputDirectory>${basedir}/target</outputDirectory>-->
-                            <!--<resources>-->
-                                <!--<resource>-->
-                                    <!--<directory>src/main/resources</directory>-->
-                                <!--</resource>-->
-                            <!--</resources>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-
-            <!--<plugin>-->
-                <!--<artifactId>maven-antrun-plugin</artifactId>-->
-                <!--<version>1.7</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>process-resources</phase>-->
-                        <!--<configuration>-->
-                            <!--<tasks>-->
-                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
-                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public home"/>-->
-                                <!--</exec>-->
-
-                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
-                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public rest"/>-->
-                                <!--</exec>-->
-                                <!--<exec dir="${project.basedir}" executable="${project.basedir}/src/main/apiblueprint/scripts/convert-blueprint.sh" failonerror="true">-->
-                                    <!--<arg line="${project.basedir}/src/main/apiblueprint/resources ${project.basedir}/target/classes/public thrift"/>-->
-                                <!--</exec>-->
-                                <!--<copy todir="${project.basedir}/target/classes/public/images">-->
-                                    <!--<fileset dir="${project.basedir}/src/main/apiblueprint/resources/images" includes="*.png" />-->
-                                <!--</copy>-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-
-
-
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<version>2.5.2</version>-->
-                <!--<configuration>-->
-                    <!--<descriptor>src/main/assembly/bundle-app.xml</descriptor>-->
-                    <!--<attach>false</attach>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>make-assembly</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>single</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
@@ -159,46 +86,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-enforcer-plugin</artifactId>-->
-                <!--<version>${version.enforcer.plugin}</version>-->
-                <!--<configuration>-->
-                    <!--<rules>-->
-                        <!--<bannedPlugins>-->
-                            <!--<level>WARN</level>-->
-                        <!--</bannedPlugins>-->
-                        <!--<requireReleaseDeps>-->
-                            <!--<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>-->
-                            <!--<excludes>-->
-                                <!--<exclude>com.deciphernow:*</exclude>-->
-                            <!--</excludes>-->
-                        <!--</requireReleaseDeps>-->
-                        <!--<dependencyConvergence/>-->
-                    <!--</rules>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-dependency-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>unpack</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<artifactItems>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<artifactItem>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<groupId>tanukisoft</groupId>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<artifactId>wrapper-delta-pack</artifactId>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<type>tar.gz</type>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<outputDirectory>${project.build.directory}</outputDirectory>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</artifactItem>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</artifactItems>&ndash;&gt;-->
-                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-            <!--</plugin>-->
         </plugins>
 
     </build>
