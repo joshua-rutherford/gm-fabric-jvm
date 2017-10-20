@@ -286,7 +286,7 @@ object GMFNetworkConfigurationResolver {
     * Register either the Hostname or IP Address for service endpoints to ZK.
     */
   def identifyHostOrIP : Unit = {
-    if (!serverConfig.zk.zookeeperConnection().isEmpty && !serverConfig.zk.announcementPoint().isEmpty) {
+//    if (!serverConfig.zk.zookeeperConnection().isEmpty && !serverConfig.zk.announcementPoint().isEmpty) {
       if (haveNetworkInterfaceName) {
         getNetworkInfo(Option(NetworkInterface.getByName(networkInterfaceName)))
       }
@@ -296,10 +296,10 @@ object GMFNetworkConfigurationResolver {
           findNetworkInfo(networkInterfaces.nextElement)
         }
       }
-    }
-    else {
-      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
-    }
+//    }
+//    else {
+//      log.ifInfo("Zookeeper properties not configured. Nothing to announce.")
+//    }
   }
 
   /**
