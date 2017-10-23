@@ -46,6 +46,7 @@ The various aspects of coding a microservice.
 The various aspects of configuring a microservice.
 
 - [Available parameters to configure for the microservice.](documentation/Parameters.md)
+- [Change announcement and bind ports.](documentation/AnnounceAndBind.md)
 - [How to register the microservice for auto-discovery.](documentation/ZookeeperAutoDiscovery.md)
 - [How to register IP addresses for auto discovery.](documentation/ConfigureIPAddressResolution.md)
 - [How to enable 2-Way SSL.](documentation/TwoWaySSL.md)
