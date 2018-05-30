@@ -39,6 +39,9 @@ import com.deciphernow.server.support.{Decryptor, DecryptorManager}
 class GMFabricThriftServer(filters: Seq[SimpleFilter[Array[Byte], Array[Byte]]], service: AnyRef)
   extends App {
 
+  override def allowUndefinedFlags: Boolean = com.deciphernow.server.config.flags.allowUndefinedFlags.apply
+  override def failfastOnFlagsNotParsed: Boolean = com.deciphernow.server.config.flags.failFastOnFlagsNotParsed.apply
+
   val log = Logger.get(getClass)
   var server : Option[ListeningServer] = None
   val serverPrefixLabel = "thrift"

@@ -51,3 +51,10 @@ To retrieve your decryptor in __Scala__ do the following:
     
     ...
 
+## NO!!! I want to instantiate my decryptor in a different location.
+
+If for some reasone you want to instantiate different decryptors within different microservice modules you can now pass a fully quallified class name to the `DecryptorManager` and have a new instance created.
+
+    val myDecryptorManager = new DecryptorManager(Option("com.skittles.wombat.MyDecryptor"))
+    val returnV1 = myDecryptorManager.getInstance.decryptResource("Some encrypted String")
+

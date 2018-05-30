@@ -51,6 +51,15 @@ class GMFabricRestServer(filters: Seq[Filter[FinagleRequest, FinagleResponse,Fin
     * @return
     */
   override def defaultMaxRequestSize: StorageUnit = StorageUnit.fromMegabytes(com.deciphernow.server.config.rest.maxRequestSize.apply)
+
+  override def defaultHttpServerName: String = com.deciphernow.server.config.rest.httpServerName.apply
+
+  override def defaultHttpsServerName: String = com.deciphernow.server.config.rest.httpsServerName.apply
+
+  override def disableAdminHttpServer: Boolean = com.deciphernow.server.config.admin.disableAdminHttpServer.apply
+
+  override def allowUndefinedFlags: Boolean = com.deciphernow.server.config.flags.allowUndefinedFlags.apply
+
   /**
     * HTTP Port
     *

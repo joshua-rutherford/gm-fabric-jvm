@@ -28,6 +28,7 @@ import scala.util.Try
 object TlsConfigUtil {
 
   /**
+    * Create an server SSLEngine given an SSLContext.
     *
     * @param sslContext the context for the SSL Engine
     * @param clientAuth which mode to use for client authentication
@@ -45,6 +46,7 @@ object TlsConfigUtil {
   }
 
   /**
+    * Create a client SSLEngine given an SSLContext
     *
     * @param sslContext
     * @return
@@ -81,6 +83,30 @@ object TlsConfigUtil {
   }
 
   /**
+    * Create an SSL context for use in an SSL Engine
+    *
+    * @param keyStoreFile the file representing the private keystore
+    * @param keyStorePassword the password to the keystore
+    * @param trustStoreFile the file representing the trust store
+    * @param trustStorePassword the password to the trust store
+    * @param aDecryptor a decryptor to override the default decryptor instantiated during classloading.
+    * @return an SSLContext suitable for creating the server or client TLS engine
+    */
+  def createSslContext(keyStoreFile: File,
+                       keyStorePassword: String,
+                       trustStoreFile: File,
+                       trustStorePassword: String,
+                       aDecryptor: Decryptor): SSLContext = {
+
+    val (ksIs, tsIs) = (new FileInputStream(keyStoreFile), new FileInputStream(trustStoreFile))
+    try {
+      createSslContext(ksIs, keyStorePassword, tsIs, trustStorePassword, aDecryptor)
+    } finally {
+      Try(ksIs.close())
+      Try(tsIs.close())
+    }
+  }
+  /**
    * Create an SSL context for use in an SSL Engine.  Note that this method does not close your input streams!
    *
    * @param keyStoreStream the input stream representing the private keystore
@@ -101,6 +127,41 @@ object TlsConfigUtil {
 
     val decryptedKeystorePassword = decrypter.decryptResource(keyStorePassword).toCharArray()
     val decryptedTrustorePassword = decrypter.decryptResource(trustStorePassword).toCharArray()
+
+    keyStore.load(keyStoreStream, decryptedKeystorePassword)
+    keyManagerFactory.init(keyStore, decryptedKeystorePassword)
+    trustStore.load(trustStoreStream, decryptedTrustorePassword)
+    trustManagerFactory.init(trustStore)
+
+    val sslContext = SSLContext.getInstance("TLS")
+
+    sslContext.init(keyManagerFactory.getKeyManagers, trustManagerFactory.getTrustManagers, null)
+    sslContext
+  }
+
+  /**
+    * Create an SSL context for use in an SSL Engine.  Note that this method does not close your input streams!
+    *
+    * @param keyStoreStream the input stream representing the private keystore
+    * @param keyStorePassword the password to the keystore
+    * @param trustStoreStream the input stream representing the trust store
+    * @param trustStorePassword the password to the trust store
+    * @param aDecryptor a decryptor to override the default decryptor instantiated during classloading.
+    * @return an SSLContext suitable for creating the server or client TLS engine
+    */
+  def createSslContext(keyStoreStream: InputStream,
+                       keyStorePassword: String,
+                       trustStoreStream: InputStream,
+                       trustStorePassword: String,
+                       aDecryptor: Decryptor): SSLContext = {
+
+    val keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm)
+    val trustManagerFactory = TrustManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm)
+    val keyStore = KeyStore.getInstance(KeyStore.getDefaultType)
+    val trustStore = KeyStore.getInstance(KeyStore.getDefaultType)
+
+    val decryptedKeystorePassword = aDecryptor.decryptResource(keyStorePassword).toCharArray()
+    val decryptedTrustorePassword = aDecryptor.decryptResource(trustStorePassword).toCharArray()
 
     keyStore.load(keyStoreStream, decryptedKeystorePassword)
     keyManagerFactory.init(keyStore, decryptedKeystorePassword)

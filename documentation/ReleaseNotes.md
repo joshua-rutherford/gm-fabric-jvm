@@ -3,14 +3,37 @@
 
 ## gm-fabric-jvm-0.2.6
 
+### Issue 148
+
+- Documentation cleanup.
+
+### Issue 136
+
+- Added more configuration attributes that allow you to over-ride the default configuration of the framework.
+  -com.deciphernow.server.config.rest.httpServerName=http
+  -com.deciphernow.server.config.rest.httpsServerName=https
+  -com.deciphernow.server.config.admin.disableAdminHttpServer=false
+  -com.deciphernow.server.config.flags.allowUndefinedFlags=false
+  -com.deciphernow.server.config.flags.failFastOnFlagsNotParsed=false
+  
 ### Issue 132
 
 - Add documentation on how to upgrade microservice built on older version of the framework.
 - Some documentation corrections && cleanup.
 
+### Issue 131
+
+- Documentation about what files to ignore within ones VCS.
+
 ### Issue 123
 
 - Upgrade log4j to 1.2.17
+
+### Issue 115
+
+- Can instantiate a DecryptorManager anywhere not just through classloading.
+- Can pass a decryptor to the TLSUtils.
+- Updated documentation on using TLSUtils.
 
 ## gm-fabric-jvm-0.2.5
 

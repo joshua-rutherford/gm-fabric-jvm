@@ -27,6 +27,9 @@ import org.scalatest.{FlatSpec, Matchers}
 @RunWith(classOf[JUnitRunner])
 class DecryptorManagerSpec extends FlatSpec with Matchers {
 
+  // This replaces the NoDecryptor with a FakeDecryptor to prove can replace the default.
+  System.setProperty("com.deciphernow.server.config.resources.decryptClass","com.deciphernow.server.support.FakeDecryptor")
+
   /**
     * Default to the Default decrypter : NoDecrypter
     */
@@ -35,16 +38,24 @@ class DecryptorManagerSpec extends FlatSpec with Matchers {
     val resource = "password"
     instance.decryptResource(resource) should equal(resource)
   }
+
+
   "Given an encrypted resource string" should " return the unencrypted string" in {
     val encryptedResource = "-->{706c75525a30322f5a615a3846363776474764622f7861762f75334a593551682f445237386964676a52513d}"
     val decryptedResource = "ADecryptedString"
-    val instance = DecryptorManagerTester.getInstance
+    val instance = DecryptorManager.getInstance
     instance.decryptResource(encryptedResource) should equal(decryptedResource)
+  }
+
+
+  "Instantiate my own decryptor" should " return the fake encrypted string identifying my decryptor" in {
+    val mySillyDecryptor = new DecryptorManager(Option("com.deciphernow.server.support.MySillyDecryptor_1"))
+    val returnV1 = mySillyDecryptor.getInstance.decryptResource("-->{BINGO")
+    returnV1 should equal("MySillyDecryptor_1")
+    val defaultDecryptor = DecryptorManager.getInstance
+
+    mySillyDecryptor.getInstance.getClass.getName should equal("com.deciphernow.server.support.MySillyDecryptor_1")
+    defaultDecryptor.getClass.getName should equal("com.deciphernow.server.support.FakeDecryptor")
   }
 }
 
-object DecryptorManagerTester extends DecryptorManagerTester
-
-class DecryptorManagerTester extends DecryptorManager {
-  override lazy val className : Option[String] = Option("com.deciphernow.server.support.FakeDecryptor")
-}

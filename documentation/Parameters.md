@@ -33,12 +33,39 @@ are encrypted through your implementation then enable as shown.
 
     -com.deciphernow.server.config.resources.decryptClass=com.blah.my.own.Decryptor
     
+
+    #-com.deciphernow.server.config.flags.allowUndefinedFlags=false
+    #-com.deciphernow.server.config.flags.failFastOnFlagsNotParsed=false
+
+## Changing RESTful server names
+
+    -com.deciphernow.server.config.rest.httpServerName=http
+    -com.deciphernow.server.config.rest.httpsServerName=https
+
+## Disable the Admin HTTP Server
+
+    -com.deciphernow.server.config.admin.disableAdminHttpServer=false
+        
+## AclRestFilter block HTTP Requests
+
+    -com.deciphernow.server.config.filter.blockHttp=false
+        
+## Processing flags
+
+Allow for flags to be defined in **paramters.conf** but not defined in the code and not fail.
+
+    -com.deciphernow.server.config.flags.allowUndefinedFlags=false
+    
+Have the service shutdown if there is an issue when flags are not parsed.
+    
+    -com.deciphernow.server.config.flags.failFastOnFlagsNotParsed=false
+        
 ## Changing the Maximum Request Size
 The default value is **25** Megabytes. It is a long value always represented as **Megabytes**. It must be less than **2**GB. You don't have to specify the unit of measure.
 
     -com.deciphernow.server.config.rest.maxRequestSize=25
 
-### Bind and Announce
+## Bind and Announce
 To configure different ports to __BIND__ to or __ANNOUNCE__ different ports [see](AnnounceAndBind.md).
     
 ## Set the Thrift method level statistics unit of measure
@@ -59,7 +86,7 @@ If `enableIpAddressResolution` is true and no ethernet interface name assigned t
     -com.deciphernow.server.config.ipAddress.enableIpAddressResolution=false
     -com.deciphernow.server.config.ipAddress.useNetworkInterfaceName=eth0
  
-# Ignore creating StatsReceiver for static routes.
+## Ignore creating StatsReceiver for static routes.
 The framework auto-magically understands how to create the StatsReceiver for the static route. No need to create it.
    
     -com.deciphernow.server.config.staticRoutes.ignore=/ping

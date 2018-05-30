@@ -27,6 +27,10 @@ package resources {
   object decryptClass extends GlobalFlag[String]("com.deciphernow.server.support.NoDecryptor","Class to decrypt data")
 }
 
+package flags {
+  object failFastOnFlagsNotParsed extends GlobalFlag[Boolean](false,"")
+  object allowUndefinedFlags extends GlobalFlag[Boolean](false,"")
+}
 
 /**
   * Environment variables that override the configuration in parameters.config.
@@ -47,7 +51,9 @@ package os.env {
 package rest {
 
   object httpPort  extends GlobalFlag[String](":8888", "HTTP Port")
+  object httpServerName extends GlobalFlag[String]("http", "")
   object httpsPort extends GlobalFlag[String](":8999", "HTTPS Port")
+  object httpsServerName extends GlobalFlag[String]("https","")
   object maxRequestSize extends GlobalFlag[Long](25, "Default unit of measure is Megabytes. Must be less than 2 GB!")
 }
 
@@ -59,6 +65,7 @@ package rest {
 package admin {
 
   object port extends GlobalFlag[String](":9990", "Admin Port")
+  object disableAdminHttpServer extends GlobalFlag[Boolean](false,"")
 
 }
 

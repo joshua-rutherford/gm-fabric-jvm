@@ -39,14 +39,13 @@ How to code a microservice.
 
 <!-- https://github.com/DecipherNow -->
 
-- [How to create my microservice.](documentation/CreatingNewMS.md)
-- [How to add logging to my microservice.](documentation/Logging.md)
+- [How to create a microservice.](documentation/CreatingNewMS.md)
+- [How to add logging to a microservice.](documentation/Logging.md)
 - [Expanding thrift capabilities.](documentation/Thrift.md)
 - [How to write clients.](documentation/Clients.md)
-- [Adding API documentation to your microservice.](documentation/APIDocumentation.md)
+- [Adding API documentation to the microservice.](documentation/APIDocumentation.md)
 - [How to build an RPM.](documentation/RPM.md)
-- [How to upgrade the microservice framework with new Twitter libraries.](documentation/UpgradingFramework.md)
-- [Upgrading microservices build an older version of gm-fabric-jvm](documentation/UpgradingOlderMicroservice.md)
+- [Upgrading a microservices built on an older version of gm-fabric-jvm](documentation/UpgradingOlderMicroservice.md)
 
 ## Version Control System
 
@@ -80,10 +79,18 @@ How to configure filters and what they provide for your microservice.
 - [How to capture metrics for dynamic URI's (GenericUriStatsFilter) ](documentation/GenericUriStatsFilter.md)
 - [How to control impersonation access to the microservice (WhitelistClientFilter).](documentation/WhitelistClientFilter.md)
 
+## TLS Utilities.
+
+- [How to use TLS utilities.](documentation/TLSUtils.md)
+
 ## Administration
 How to administer your microservice.
 
 - [How to administer the microservice.](documentation/Admin.md)
+
+## Other
+
+- [How to upgrade the microservice framework with new Twitter libraries.](documentation/UpgradingFramework.md)
 
 ## Known issues
 

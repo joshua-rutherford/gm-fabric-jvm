@@ -27,12 +27,14 @@ import com.twitter.finagle.ssl.Engine
 object TlsServerUtil {
 
   /**
+    * Create a server SSLEngine.
     *
     * @param keystoreFile
     * @param keystorePassword
     * @param truststoreFile
     * @param truststorePassword
-    * @return
+    *
+    * @return Server side configured SSLEngine.
     */
   def createSslEngine(keystoreFile: File, keystorePassword: String,
                       truststoreFile: File, truststorePassword: String) : SSLEngine = {
@@ -43,6 +45,11 @@ object TlsServerUtil {
   }
 
   /**
+    *
+    * @param keystoreFile
+    * @param keystorePassword
+    * @param truststoreFile
+    * @param truststorePassword
     *
     * @return
     */

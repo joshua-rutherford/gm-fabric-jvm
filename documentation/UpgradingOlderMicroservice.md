@@ -1,4 +1,5 @@
-#Overview
+# Overview
+
 This document defines the required modifications one has to make to microservices that where build upon an older version of the gm-fabric-jvm.
 
 ## Upgrading to gm-fabric-jvm-0.2.5
